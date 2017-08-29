@@ -1,106 +1,132 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Win32;
 using System.Net;
 using System.IO;
 using Newtonsoft.Json.Linq;
+using RegistryUtils;
+using System.Threading;
 
 namespace SteamNotifier {
+
     class Program {
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
-        /// 
+
+        public static NotifyIcon ni = new NotifyIcon();
+
+        public static string logPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\debug.log";
+
+        public static EventWaitHandle waitHandle;
 
         [STAThread]
-        static void Main()
+        public static void Main()
         {
 
-            NotifyIcon ni = new NotifyIcon();
+            // WILL TO THIS AT A LATER DATE
 
-            ni.Visible = true;
-            ni.Icon = Properties.Resources.icon;
+            //ContextMenuStrip menu = new ContextMenuStrip();
 
+            //menu.Items.Add("About");
+            //menu.Items.Add("Exit");
 
-            Application.EnableVisualStyles();
-            //Application.SetCompatibleTextRenderingDefault(false);
-            //Application.Run(new Form1());
+            //ni.ContextMenuStrip = menu;
 
-            start(ni);
+            File.WriteAllText(logPath, String.Empty);
 
-        }
+            waitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
 
-        static void start(NotifyIcon ni)
-        {
+            RegistryMonitor monitor = new RegistryMonitor(RegistryHive.CurrentUser, @"SOFTWARE\Valve\Steam\Apps\");
 
-            /* 
-             * 
-             * this is a REALLY BAD solution
-             * and by really bad i mean the worst solution
-             * future me will probably regret this
-             * in fact i regret this now
-             * 
-             * TODO: fix this piece of shit
-             *
-             */
+            monitor.RegChanged += new EventHandler(regChanged);
 
-            /*
-             * 
-             * Restarting itself every 10 mins
-             * since I can't figure out how to
-             * constantly check registry without
-             * having loads of memory and CPU
-             * usage taken
-             * 
-             */
+            //AppDomain.CurrentDomain.ProcessExit += new EventHandler(exit);
 
-            int count = 0;
+            log("Starting logging..");
 
-            while (true)
+            try
             {
 
-                if (count >= 30)
-                {
-                    exit(ni);
-                    break;
-                }
-                else
-                {
-                    count += 1;
-                    notify(ni);
-                }
+                monitor.Start();
 
-                System.Threading.Thread.Sleep(10000);
             }
+            catch
+            {
+
+                log("FAILED TO START REGISTRY MONITOR");
+
+            }
+            finally
+            {
+
+                log("Successfully started the registry monitor");
+                log("Waiting for registry updates");
+
+            }
+
+
+            //ni.BalloonTipClicked += new EventHandler(balloonClicked);
+            ni.Visible = true;
+            ni.Icon = Properties.Resources.icon_bg;
+
+
+            Console.ReadLine();
+            waitHandle.WaitOne();
 
         }
 
-        
-
-        public static void notify(NotifyIcon ni)
+        public static void regChanged(object sender, EventArgs e)
         {
 
-            RegistryKey steamKey = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Default).OpenSubKey(@"SOFTWARE\Valve\Steam\Apps\");
+            log("Registry change detected");
+            notify();
+
+        }
+
+        public static void notify()
+        {
+
+            log("Notify method called");
+
+            RegistryKey steamKey = null;
+
+            try
+            {
+
+                steamKey = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Default).OpenSubKey(@"Software\Valve\Steam\Apps\");
+
+            }
+            catch
+            {
+
+                log("FAILED TO RETRIEVE STEAM BASE KEY");
+
+            }
+            finally
+            {
+
+                log("Steam base key retrieved");
+
+            }
 
             string appName = (string)updateCheck(steamKey)[0];
             string appId = (string)updateCheck(steamKey)[1];
             bool isUpdating = (bool)updateCheck(steamKey)[2];
 
-            if ((bool)updateCheck(steamKey)[2] && Properties.Settings.Default.notified == false)
+            if ((bool)updateCheck(steamKey)[2])
             {
-                ni.ShowBalloonTip(100, "Steam has started a download", "An update for " + appName + " has started downloading", ToolTipIcon.Info);
-                Properties.Settings.Default.notified = true;
-            }
-            else if (!(bool)updateCheck(steamKey)[2] && Properties.Settings.Default.notified == true)
-            {
-                Properties.Settings.Default.notified = false;
-                //ni.ShowBalloonTip(100, "Check Occurred", "Steam has been checked but nothing is downloading at the moment.", ToolTipIcon.None);
-            }
-        }
 
+                log("Detected update for " + appName);
+                ni.ShowBalloonTip(100, "Steam has started a download", "An update for " + appName + " has started downloading", ToolTipIcon.Info);
+
+            }
+            else if (!(bool)updateCheck(steamKey)[2])
+            {
+
+                //ni.ShowBalloonTip(100, "Steam has stopped a download", "An update for " + appName + " has stopped downloading", ToolTipIcon.None);
+
+            }
+
+        }
 
         /*
          * 
@@ -109,25 +135,31 @@ namespace SteamNotifier {
          * https://github.com/benjibobs/Steam-Shutdown
          * under GNU v3.0 licence
          * 
-         * Changes to method referenced
-         * by a commented $
+         * Modified to suit needs
          * 
          */
 
         static object[] updateCheck(RegistryKey key)
         {
 
+            log("updateCheck method called");
 
-            // 0: Game name
+            // 0: App Name
             // 1: App ID
             // 2: Updating Status
             object[] appInfo = { null, null, false };
 
+            log("Checking each sub key from the Steam base key");
+
             /* http://stackoverflow.com/a/2915990/5893567 */
+
             foreach (string sub in key.GetSubKeyNames())
             {
 
+                log("Checking sub key " + sub + "..");
+
                 RegistryKey local = Registry.Users;
+
                 local = key.OpenSubKey(sub, true);
 
                 string[] splitLocalName = local.Name.Split('\\');
@@ -135,7 +167,6 @@ namespace SteamNotifier {
                 string appid = splitLocalName.Last();
 
                 object updating = local.GetValue("Updating");
-                
 
                 /*
                 * 232330 = CS:GO Server
@@ -150,10 +181,14 @@ namespace SteamNotifier {
 
                 if (updating != null && (int)updating == 1 && appid != "232330")
                 {
-                    
+
+                    log("Found an updating app");
+
+                    appInfo[2] = true;
                     appInfo[0] = getAppName(appid);
                     appInfo[1] = appid;
-                    appInfo[2] = true; 
+
+                    break;
 
                 }
 
@@ -165,6 +200,9 @@ namespace SteamNotifier {
 
         static string getAppName(string id)
         {
+
+            log("Retrieving name for app " + id);
+
             string appName = "Unknown App";
 
             string requestURL = "http://store.steampowered.com/api/appdetails?appids=" + id;
@@ -175,11 +213,15 @@ namespace SteamNotifier {
 
             try
             {
+
                 response = request.GetResponse();
+
             }
             catch (System.Net.WebException)
             {
+
                 // idk
+
             }
 
             Stream respStream = response.GetResponseStream();
@@ -192,22 +234,47 @@ namespace SteamNotifier {
 
             try
             {
+
                 appName = jsonContents[id]["data"]["name"];
+
             }
             catch
             {
-                // idk
+
+                appName = "Unknown App";
+
+            }
+            finally
+
+            {
+                log("Retrieved name for app  " + id + " (" + appName + ")");
+
             }
 
             return appName;
         }
 
-        static void exit(NotifyIcon ni)
+        static void exit()
         {
+
             ni.Icon = null;
             ni.Visible = false;
             ni.Dispose();
-            Application.Restart();
+            Application.Exit();
+
+        }
+
+        public static void log(string message)
+        {
+
+            string logMsg = DateTime.Now + " || " + message;
+
+            Console.WriteLine(logMsg);
+
+            string logToFile = logMsg + Environment.NewLine;
+
+            File.AppendAllText(logPath, logToFile);
+
         }
 
     }
