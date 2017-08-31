@@ -7,6 +7,7 @@ using System.IO;
 using Newtonsoft.Json.Linq;
 using RegistryUtils;
 using System.Threading;
+using System.Diagnostics;
 
 namespace SteamNotifier {
 
@@ -14,7 +15,9 @@ namespace SteamNotifier {
 
         public static NotifyIcon ni = new NotifyIcon();
 
-        public static string logPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\debug.log";
+        public static string currentPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+
+        public static string logPath = currentPath + "\\debug.log";
 
         public static EventWaitHandle waitHandle;
 
@@ -30,6 +33,8 @@ namespace SteamNotifier {
             //menu.Items.Add("Exit");
 
             //ni.ContextMenuStrip = menu;
+
+            ni.Click += trayiconClick;
 
             File.WriteAllText(logPath, String.Empty);
 
@@ -79,6 +84,25 @@ namespace SteamNotifier {
 
             log("Registry change detected");
             notify();
+
+        }
+
+        public static void trayiconClick(object sender, EventArgs e)
+        {
+
+            log("Attempting to launch utility executable");
+
+            try
+            {
+                Process.Start("SN-Utility.exe");
+                log("Utility executable launched..");
+            }
+            catch(Exception ex)
+            {
+                ni.ShowBalloonTip(100, "Could not launch settings!", "Sorry, but the settings executable could not be launched. Check the debug.log file for more info", ToolTipIcon.Info);
+                log("FAILED TO LAUNCH UTILITY EXECUTABLE");
+                log("DETAILS:" + ex.ToString());
+            }
 
         }
 

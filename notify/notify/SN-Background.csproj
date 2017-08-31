@@ -7,7 +7,7 @@
     <ProjectGuid>{BF2B85D2-EF3F-48C8-9737-75BA1B86BC65}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>SteamNotifier</RootNamespace>
-    <AssemblyName>Steam Notifier</AssemblyName>
+    <AssemblyName>SteamNotifier</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
