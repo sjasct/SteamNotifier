@@ -1,6 +1,8 @@
 # SteamNotifier
 Lightweight background program to notify you when Steam has started downloading something since Steam cannot be arsed doing it
 
+[**Download the latest version**](https://github.com/Avinch/SteamNotifier/releases/latest)
+
 
 ![An image showing a sample notification](http://i.imgur.com/lUDQ3LE.png)
 
