@@ -1,5 +1,5 @@
-﻿namespace SN_Utility {
-    partial class SNUtility {
+﻿namespace SteamNotifierHelper {
+    partial class Helper {
         /// <summary>
         /// Required designer variable.
         /// </summary>
@@ -26,7 +26,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SNUtility));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Helper));
             this.lblHead = new System.Windows.Forms.Label();
             this.lblVersion = new System.Windows.Forms.Label();
             this.ckbStartup = new System.Windows.Forms.CheckBox();
@@ -88,7 +88,7 @@
             // 
             // imgIcon
             // 
-            this.imgIcon.Image = global::SN_Utility.Properties.Resources.icon_bg2;
+            this.imgIcon.Image = global::SteamNotifierHelper.Properties.Resources.icon_bg2;
             this.imgIcon.Location = new System.Drawing.Point(12, 12);
             this.imgIcon.Name = "imgIcon";
             this.imgIcon.Size = new System.Drawing.Size(73, 67);

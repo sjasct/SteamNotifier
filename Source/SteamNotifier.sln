@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.4
+VisualStudioVersion = 15.0.26730.10
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SN-Background", "notify\SN-Background.csproj", "{BF2B85D2-EF3F-48C8-9737-75BA1B86BC65}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SteamNotifier", "SteamNotifier\SteamNotifier.csproj", "{BF2B85D2-EF3F-48C8-9737-75BA1B86BC65}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SN-Utility", "SN-Utility\SN-Utility.csproj", "{CB7AF84B-6926-4393-8D0D-0BC34B0D1173}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SteamNotifierHelper", "SteamNotifierHelper\SteamNotifierHelper.csproj", "{CB7AF84B-6926-4393-8D0D-0BC34B0D1173}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,5 +24,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4F06A65B-A219-460F-B807-FE0A3A0DD9E7}
 	EndGlobalSection
 EndGlobal
