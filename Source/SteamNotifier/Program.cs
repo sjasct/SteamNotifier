@@ -128,7 +128,7 @@ namespace SteamNotifier
 
             try
             {
-                Process.Start("SN-Utility.exe");
+                Process.Start("SteamNotifierHelper.exe");
                 log("Utility executable launched..");
             }
             catch (Exception ex)
