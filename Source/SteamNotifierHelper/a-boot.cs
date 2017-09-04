@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using System.Windows.Forms;
 
-namespace SteamNotifierHelper {
-    public partial class About : Form {
+namespace SteamNotifierHelper
+{
+    public partial class About : Form
+    {
         public About()
         {
             InitializeComponent();
@@ -17,17 +12,17 @@ namespace SteamNotifierHelper {
 
         private void lblDevLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start("http://samjas.co.uk");
+            Process.Start("http://samjas.co.uk");
         }
 
         private void lblGitHub_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start("http://github.com/avinch/steamnotifier");
+            Process.Start("http://github.com/avinch/steamnotifier");
         }
 
         private void lblLicenceLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://github.com/Avinch/SteamNotifier/blob/master/LICENSE");
+            Process.Start("https://github.com/Avinch/SteamNotifier/blob/master/LICENSE");
         }
     }
 }
