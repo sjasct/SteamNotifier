@@ -89,7 +89,7 @@ namespace SteamNotifier
             string appName = updatingApp.AppName;
             string appId = updatingApp.AppId;
             bool isUpdating = updatingApp.UpdatingStatus;
-
+            
             if (!isUpdating)
             {
                 return;
@@ -203,8 +203,8 @@ namespace SteamNotifier
 
             /* http://stackoverflow.com/a/2915990/5893567 */
 
-            Task.Run(() =>
-            {
+            //Task.Run(() =>
+            //{
                 Parallel.ForEach(key.GetSubKeyNames(), (sub, loopState) =>
                 {
                     Logger.Instance.Info("Checking sub key " + sub + "..");
@@ -240,11 +240,12 @@ namespace SteamNotifier
 
                     Logger.Instance.Info("Found an updating app");
 
-                    loopState.Break();
+                    appInfo = new AppInfo { AppId = appid, UpdatingStatus = true, AppName = GetAppName(appid) };
 
-                    appInfo = new AppInfo {AppId = appid, UpdatingStatus = true, AppName = GetAppName(appid)};
+                    loopState.Break();
+                    
                 });
-            });
+            //});
 
             return appInfo;
         }
