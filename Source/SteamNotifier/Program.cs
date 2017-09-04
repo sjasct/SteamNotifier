@@ -1,38 +1,27 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Reflection;
+using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Win32;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RegistryUtils;
+using SteamNotifier.Helpers;
 using SteamNotifier.Properties;
 
 namespace SteamNotifier
 {
     internal class Program
     {
-        public static NotifyIcon ni = new NotifyIcon();
+        public static NotifyIcon Ni = new NotifyIcon();
 
-        public static string currentPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
-        public static string logPath = currentPath + "\\debug.log";
-
-        public static EventWaitHandle waitHandle;
-
-        public static void log(string message)
-        {
-            string logMsg = DateTime.Now + " || " + message;
-
-            Console.WriteLine(logMsg);
-
-            string logToFile = logMsg + Environment.NewLine;
-
-            File.AppendAllText(logPath, logToFile);
-        }
+        public static EventWaitHandle WaitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
 
         [STAThread]
         public static void Main()
@@ -46,19 +35,13 @@ namespace SteamNotifier
 
             //ni.ContextMenuStrip = menu;
 
-            ni.Click += trayiconClick;
-
-            File.WriteAllText(logPath, string.Empty);
-
-            waitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
+            Ni.Click += TrayIconOnClick;
 
             RegistryMonitor monitor = new RegistryMonitor(RegistryHive.CurrentUser, @"SOFTWARE\Valve\Steam\Apps\");
 
-            monitor.RegChanged += regChanged;
+            monitor.RegChanged += RegChanged;
 
             //AppDomain.CurrentDomain.ProcessExit += new EventHandler(exit);
-
-            log("Starting logging..");
 
             try
             {
@@ -66,25 +49,25 @@ namespace SteamNotifier
             }
             catch
             {
-                log("FAILED TO START REGISTRY MONITOR");
+                Logger.Instance.Info("FAILED TO START REGISTRY MONITOR");
             }
             finally
             {
-                log("Successfully started the registry monitor");
-                log("Waiting for registry updates");
+                Logger.Instance.Info("Successfully started the registry monitor");
+                Logger.Instance.Info("Waiting for registry updates");
             }
 
             //ni.BalloonTipClicked += new EventHandler(balloonClicked);
-            ni.Visible = true;
-            ni.Icon = Resources.icon_bg;
+            Ni.Visible = true;
+            Ni.Icon = Resources.icon_bg;
 
             Console.ReadLine();
-            waitHandle.WaitOne();
+            WaitHandle.WaitOne();
         }
 
-        public static void notify()
+        public static void Notify()
         {
-            log("Notify method called");
+            Logger.Instance.Info("Notify method called");
 
             RegistryKey steamKey = null;
 
@@ -92,102 +75,108 @@ namespace SteamNotifier
             {
                 steamKey = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Default).OpenSubKey(@"Software\Valve\Steam\Apps\");
             }
-            catch
+            catch (Exception e)
             {
-                log("FAILED TO RETRIEVE STEAM BASE KEY");
+                Logger.Instance.Error("FAILED TO RETRIEVE STEAM BASE KEY");
+                Logger.Instance.Exception(e);
             }
             finally
             {
-                log("Steam base key retrieved");
+                Logger.Instance.Info("Steam base key retrieved");
             }
 
-            string appName = (string) updateCheck(steamKey)[0];
-            string appId = (string) updateCheck(steamKey)[1];
-            bool isUpdating = (bool) updateCheck(steamKey)[2];
+            AppInfo updatingApp = UpdateCheck(steamKey);
+            string appName = updatingApp.AppName;
+            string appId = updatingApp.AppId;
+            bool isUpdating = updatingApp.UpdatingStatus;
 
-            if ((bool) updateCheck(steamKey)[2])
+            if (!isUpdating)
             {
-                log("Detected update for " + appName);
-                ni.ShowBalloonTip(100, "Steam has started a download", "An update for " + appName + " has started downloading", ToolTipIcon.Info);
+                return;
             }
-            else if (!(bool) updateCheck(steamKey)[2])
-            {
-                //ni.ShowBalloonTip(100, "Steam has stopped a download", "An update for " + appName + " has stopped downloading", ToolTipIcon.None);
-            }
+
+            Logger.Instance.Info("Detected update for {0} ({1})", appName, appId);
+            Ni.ShowBalloonTip(100, "Steam has started a download", "An update for " + appName + " has started downloading", ToolTipIcon.Info);
         }
 
-        public static void regChanged(object sender, EventArgs e)
+        public static void RegChanged(object sender, EventArgs e)
         {
-            log("Registry change detected");
-            notify();
+            Logger.Instance.Info("Registry change detected");
+            Notify();
         }
 
-        public static void trayiconClick(object sender, EventArgs e)
+        public static void TrayIconOnClick(object sender, EventArgs e)
         {
-            log("Attempting to launch utility executable");
+            Logger.Instance.Info("Attempting to launch utility executable");
 
             try
             {
                 Process.Start("SteamNotifierHelper.exe");
-                log("Utility executable launched..");
+                Logger.Instance.Info("Utility executable launched..");
+            }
+            catch (FileNotFoundException fileNotFoundException)
+            {
+                // TODO: Handle executable missing
             }
             catch (Exception ex)
             {
-                ni.ShowBalloonTip(100, "Could not launch settings!", "Sorry, but the settings executable could not be launched. Check the debug.log file for more info", ToolTipIcon.Info);
-                log("FAILED TO LAUNCH UTILITY EXECUTABLE");
-                log("DETAILS:" + ex);
+                Ni.ShowBalloonTip(100, "Could not launch settings!", "Sorry, but the settings executable could not be launched. Check the debug.log file for more info", ToolTipIcon.Info);
+                Logger.Instance.Error("FAILED TO LAUNCH UTILITY EXECUTABLE");
+                Logger.Instance.Exception(ex);
             }
         }
 
-        private static void exit()
+        private static void Exit()
         {
-            ni.Icon = null;
-            ni.Visible = false;
-            ni.Dispose();
+            Ni.Icon = null;
+            Ni.Visible = false;
+            Ni.Dispose();
+            Logger.Instance.Dispose();
             Application.Exit();
         }
 
-        private static string getAppName(string id)
+        private static string GetAppName(string id)
         {
-            log("Retrieving name for app " + id);
+            Logger.Instance.Info("Retrieving name for app {0}", id);
 
             string appName = "Unknown App";
-
-            string requestURL = "http://store.steampowered.com/api/appdetails?appids=" + id;
-
-            HttpWebRequest request = (HttpWebRequest) WebRequest.Create(requestURL);
-
-            WebResponse response = null;
+            string requestUrl = string.Format(CultureInfo.InvariantCulture, "http://store.steampowered.com/api/appdetails?appids={0}", id);
+            string contents = string.Empty;
 
             try
             {
-                response = request.GetResponse();
+                using (WebClient webClient = new WebClient())
+                {
+                    webClient.Encoding = Encoding.UTF8;
+                    contents = webClient.DownloadString(requestUrl);
+                }
             }
-            catch (WebException)
+            catch (WebException webException)
             {
-                // idk
+                // TODO: properly handle
             }
-
-            Stream respStream = response.GetResponseStream();
-
-            StreamReader read = new StreamReader(respStream);
-
-            string contents = read.ReadToEnd();
-
-            dynamic jsonContents = JObject.Parse(contents);
+            catch (Exception e)
+            {
+                Logger.Instance.Exception(e);
+            }
 
             try
             {
+                dynamic jsonContents = JObject.Parse(contents);
                 appName = jsonContents[id]["data"]["name"];
             }
-            catch
+            catch (JsonReaderException jsonReaderException)
             {
+                Logger.Instance.Exception(jsonReaderException);
+            }
+            catch (Exception e)
+            {
+                Logger.Instance.Exception(e);
                 appName = "Unknown App";
             }
             finally
-
             {
-                log("Retrieved name for app  " + id + " (" + appName + ")");
+                Logger.Instance.Info("Retrieved name for app  " + id + " (" + appName + ")");
             }
 
             return appName;
@@ -204,57 +193,67 @@ namespace SteamNotifier
          * 
          */
 
-        private static object[] updateCheck(RegistryKey key)
+        private static AppInfo UpdateCheck(RegistryKey key)
         {
-            log("updateCheck method called");
+            Logger.Instance.Info("updateCheck method called");
 
-            // 0: App Name
-            // 1: App ID
-            // 2: Updating Status
-            object[] appInfo = {null, null, false};
+            AppInfo appInfo = new AppInfo();
 
-            log("Checking each sub key from the Steam base key");
+            Logger.Instance.Info("Checking each sub key from the Steam base key");
 
             /* http://stackoverflow.com/a/2915990/5893567 */
 
-            foreach (string sub in key.GetSubKeyNames())
+            Task.Run(() =>
             {
-                log("Checking sub key " + sub + "..");
-
-                RegistryKey local = Registry.Users;
-
-                local = key.OpenSubKey(sub, true);
-
-                string[] splitLocalName = local.Name.Split('\\');
-
-                string appid = splitLocalName.Last();
-
-                object updating = local.GetValue("Updating");
-
-                /*
-                * 232330 = CS:GO Server
-                * 
-                * Showing as updating in
-                * registry but I don't
-                * even have access to 
-                * it on Steam
-                * 
-                * ¯\_(ツ)_/¯
-                */
-
-                if (updating != null && (int) updating == 1 && appid != "232330")
+                Parallel.ForEach(key.GetSubKeyNames(), (sub, loopState) =>
                 {
-                    log("Found an updating app");
+                    Logger.Instance.Info("Checking sub key " + sub + "..");
 
-                    appInfo[2] = true;
-                    appInfo[0] = getAppName(appid);
-                    appInfo[1] = appid;
+                    RegistryKey local = key.OpenSubKey(sub, true);
 
-                    break;
-                }
-            }
+                    if (local == null)
+                    {
+                        return;
+                    }
+
+                    string[] splitLocalName = local.Name.Split('\\');
+
+                    string appid = splitLocalName.Last();
+
+                    object updating = local.GetValue("Updating");
+
+                    /*
+                    * 232330 = CS:GO Server
+                    * 
+                    * Showing as updating in
+                    * registry but I don't
+                    * even have access to 
+                    * it on Steam
+                    * 
+                    * ¯\_(ツ)_/¯
+                    */
+
+                    if (updating == null || (int) updating != 1 || appid == "232330")
+                    {
+                        return;
+                    }
+
+                    Logger.Instance.Info("Found an updating app");
+
+                    loopState.Break();
+
+                    appInfo = new AppInfo {AppId = appid, UpdatingStatus = true, AppName = GetAppName(appid)};
+                });
+            });
 
             return appInfo;
+        }
+
+        private struct AppInfo
+        {
+            public string AppName;
+            public string AppId;
+            public bool UpdatingStatus;
         }
     }
 }

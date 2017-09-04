@@ -8,12 +8,12 @@ namespace SteamNotifierHelper
 {
     public partial class Helper : Form
     {
-        public static string shortcutName = "SteamNotifier";
+        public static string ShortcutName = "SteamNotifier";
 
-        public string scPath = Environment.GetFolderPath(Environment.SpecialFolder.Startup) + "\\" + shortcutName + ".lnk";
+        public string ScPath = Environment.GetFolderPath(Environment.SpecialFolder.Startup) + "\\" + ShortcutName + ".lnk";
 
-        public WshShell shell;
-        public string shortcutTargetExe = "SteamNotifier";
+        public WshShell Shell;
+        public string ShortcutTargetExe = "SteamNotifier";
 
         public Helper()
         {
@@ -22,14 +22,7 @@ namespace SteamNotifierHelper
             // ensures that changing the checked value upon startup does not trigger the event
             ckbStartup.CheckedChanged -= ckbStartup_CheckedChanged;
 
-            if (File.Exists(scPath))
-            {
-                ckbStartup.Checked = true;
-            }
-            else
-            {
-                ckbStartup.Checked = false;
-            }
+            ckbStartup.Checked = File.Exists(ScPath);
 
             ckbStartup.CheckedChanged += ckbStartup_CheckedChanged;
         }
@@ -68,13 +61,13 @@ namespace SteamNotifierHelper
         {
             if (ckbStartup.Checked)
             {
-                string startupPath = Environment.GetFolderPath(Environment.SpecialFolder.Startup) + "\\" + shortcutName + ".lnk";
+                string startupPath = Environment.GetFolderPath(Environment.SpecialFolder.Startup) + "\\" + ShortcutName + ".lnk";
 
-                string targetExe = AppDomain.CurrentDomain.BaseDirectory + shortcutTargetExe + ".exe";
+                string targetExe = AppDomain.CurrentDomain.BaseDirectory + ShortcutTargetExe + ".exe";
 
-                shell = new WshShell();
+                Shell = new WshShell();
 
-                IWshShortcut shortcut = shell.CreateShortcut(startupPath);
+                IWshShortcut shortcut = Shell.CreateShortcut(startupPath);
                 shortcut.Description = "SteamNotifier";
                 shortcut.WorkingDirectory = Application.StartupPath;
                 shortcut.TargetPath = targetExe;
@@ -82,9 +75,9 @@ namespace SteamNotifierHelper
             }
             else if (ckbStartup.Checked == false)
             {
-                if (File.Exists(scPath))
+                if (File.Exists(ScPath))
                 {
-                    File.Delete(scPath);
+                    File.Delete(ScPath);
                 }
                 else
                 {

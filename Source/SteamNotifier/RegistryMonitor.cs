@@ -176,7 +176,7 @@ namespace RegistryUtils
         private void ThreadLoop()
         {
             IntPtr registryKey;
-            int result = RegOpenKeyEx(_registryHive, _registrySubName, 0, STANDARD_RIGHTS_READ | KEY_QUERY_VALUE | KEY_NOTIFY, out registryKey);
+            int result = RegOpenKeyEx(_registryHive, _registrySubName, 0, StandardRightsRead | KeyQueryValue | KeyNotify, out registryKey);
             if (result != 0)
             {
                 throw new Win32Exception(result);
@@ -184,11 +184,11 @@ namespace RegistryUtils
 
             try
             {
-                AutoResetEvent _eventNotify = new AutoResetEvent(false);
-                WaitHandle[] waitHandles = {_eventNotify, _eventTerminate};
+                AutoResetEvent eventNotify = new AutoResetEvent(false);
+                WaitHandle[] waitHandles = {eventNotify, _eventTerminate};
                 while (!_eventTerminate.WaitOne(0, true))
                 {
-                    result = RegNotifyChangeKeyValue(registryKey, true, _regFilter, _eventNotify.Handle, true);
+                    result = RegNotifyChangeKeyValue(registryKey, true, _regFilter, eventNotify.Handle, true);
                     if (result != 0)
                     {
                         throw new Win32Exception(result);
@@ -220,17 +220,17 @@ namespace RegistryUtils
         [DllImport("advapi32.dll", SetLastError = true)]
         private static extern int RegCloseKey(IntPtr hKey);
 
-        private const int KEY_QUERY_VALUE = 0x0001;
-        private const int KEY_NOTIFY = 0x0010;
-        private const int STANDARD_RIGHTS_READ = 0x00020000;
+        private const int KeyQueryValue = 0x0001;
+        private const int KeyNotify = 0x0010;
+        private const int StandardRightsRead = 0x00020000;
 
-        private static readonly IntPtr HKEY_CLASSES_ROOT = new IntPtr(unchecked((int) 0x80000000));
-        private static readonly IntPtr HKEY_CURRENT_USER = new IntPtr(unchecked((int) 0x80000001));
-        private static readonly IntPtr HKEY_LOCAL_MACHINE = new IntPtr(unchecked((int) 0x80000002));
-        private static readonly IntPtr HKEY_USERS = new IntPtr(unchecked((int) 0x80000003));
-        private static readonly IntPtr HKEY_PERFORMANCE_DATA = new IntPtr(unchecked((int) 0x80000004));
-        private static readonly IntPtr HKEY_CURRENT_CONFIG = new IntPtr(unchecked((int) 0x80000005));
-        private static readonly IntPtr HKEY_DYN_DATA = new IntPtr(unchecked((int) 0x80000006));
+        private static readonly IntPtr HkeyClassesRoot = new IntPtr(unchecked((int) 0x80000000));
+        private static readonly IntPtr HkeyCurrentUser = new IntPtr(unchecked((int) 0x80000001));
+        private static readonly IntPtr HkeyLocalMachine = new IntPtr(unchecked((int) 0x80000002));
+        private static readonly IntPtr HkeyUsers = new IntPtr(unchecked((int) 0x80000003));
+        private static readonly IntPtr HkeyPerformanceData = new IntPtr(unchecked((int) 0x80000004));
+        private static readonly IntPtr HkeyCurrentConfig = new IntPtr(unchecked((int) 0x80000005));
+        private static readonly IntPtr HkeyDynData = new IntPtr(unchecked((int) 0x80000006));
 
         #endregion
 
@@ -311,31 +311,31 @@ namespace RegistryUtils
             switch (hive)
             {
                 case RegistryHive.ClassesRoot:
-                    _registryHive = HKEY_CLASSES_ROOT;
+                    _registryHive = HkeyClassesRoot;
                     break;
 
                 case RegistryHive.CurrentConfig:
-                    _registryHive = HKEY_CURRENT_CONFIG;
+                    _registryHive = HkeyCurrentConfig;
                     break;
 
                 case RegistryHive.CurrentUser:
-                    _registryHive = HKEY_CURRENT_USER;
+                    _registryHive = HkeyCurrentUser;
                     break;
 
                 case RegistryHive.DynData:
-                    _registryHive = HKEY_DYN_DATA;
+                    _registryHive = HkeyDynData;
                     break;
 
                 case RegistryHive.LocalMachine:
-                    _registryHive = HKEY_LOCAL_MACHINE;
+                    _registryHive = HkeyLocalMachine;
                     break;
 
                 case RegistryHive.PerformanceData:
-                    _registryHive = HKEY_PERFORMANCE_DATA;
+                    _registryHive = HkeyPerformanceData;
                     break;
 
                 case RegistryHive.Users:
-                    _registryHive = HKEY_USERS;
+                    _registryHive = HkeyUsers;
                     break;
 
                 default:
@@ -353,25 +353,25 @@ namespace RegistryUtils
             {
                 case "HKEY_CLASSES_ROOT":
                 case "HKCR":
-                    _registryHive = HKEY_CLASSES_ROOT;
+                    _registryHive = HkeyClassesRoot;
                     break;
 
                 case "HKEY_CURRENT_USER":
                 case "HKCU":
-                    _registryHive = HKEY_CURRENT_USER;
+                    _registryHive = HkeyCurrentUser;
                     break;
 
                 case "HKEY_LOCAL_MACHINE":
                 case "HKLM":
-                    _registryHive = HKEY_LOCAL_MACHINE;
+                    _registryHive = HkeyLocalMachine;
                     break;
 
                 case "HKEY_USERS":
-                    _registryHive = HKEY_USERS;
+                    _registryHive = HkeyUsers;
                     break;
 
                 case "HKEY_CURRENT_CONFIG":
-                    _registryHive = HKEY_CURRENT_CONFIG;
+                    _registryHive = HkeyCurrentConfig;
                     break;
 
                 default:
