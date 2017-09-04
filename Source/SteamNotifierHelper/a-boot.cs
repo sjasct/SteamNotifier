@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace SN_Utility {
+namespace SteamNotifierHelper {
     public partial class About : Form {
         public About()
         {

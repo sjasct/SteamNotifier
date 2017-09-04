@@ -1,4 +1,4 @@
-﻿namespace SN_Utility {
+﻿namespace SteamNotifierHelper {
     partial class About {
         /// <summary>
         /// Required designer variable.
@@ -60,7 +60,7 @@
             // 
             // imgIcon
             // 
-            this.imgIcon.Image = global::SN_Utility.Properties.Resources.icon_bg2;
+            this.imgIcon.Image = global::SteamNotifierHelper.Properties.Resources.icon_bg2;
             this.imgIcon.Location = new System.Drawing.Point(12, 12);
             this.imgIcon.Name = "imgIcon";
             this.imgIcon.Size = new System.Drawing.Size(73, 67);

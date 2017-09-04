@@ -11,8 +11,8 @@ using IWshRuntimeLibrary;
 using IO = System.IO;
 using System.Diagnostics;
 
-namespace SN_Utility {
-    public partial class SNUtility : Form {
+namespace SteamNotifierHelper {
+    public partial class Helper : Form {
 
         public WshShell shell;
 
@@ -21,7 +21,7 @@ namespace SN_Utility {
 
         public string scPath = Environment.GetFolderPath(Environment.SpecialFolder.Startup) + "\\" + shortcutName + ".lnk";
 
-        public SNUtility()
+        public Helper()
         {
             InitializeComponent();
 

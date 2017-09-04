@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{CB7AF84B-6926-4393-8D0D-0BC34B0D1173}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>SN_Utility</RootNamespace>
-    <AssemblyName>SN-Utility</AssemblyName>
+    <RootNamespace>SteamNotifierHelper</RootNamespace>
+    <AssemblyName>SteamNotifierHelper</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -34,6 +34,9 @@
   <PropertyGroup>
     <ApplicationIcon>Resources\icon-bg.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>SteamNotifierHelper.Program</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -54,19 +57,19 @@
     <Compile Include="a-boot.Designer.cs">
       <DependentUpon>a-boot.cs</DependentUpon>
     </Compile>
-    <Compile Include="SNUtility.cs">
+    <Compile Include="Helper.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SNUtility.Designer.cs">
-      <DependentUpon>SNUtility.cs</DependentUpon>
+    <Compile Include="Helper.Designer.cs">
+      <DependentUpon>Helper.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="a-boot.resx">
       <DependentUpon>a-boot.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SNUtility.resx">
-      <DependentUpon>SNUtility.cs</DependentUpon>
+    <EmbeddedResource Include="Helper.resx">
+      <DependentUpon>Helper.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
