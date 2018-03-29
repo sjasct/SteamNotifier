@@ -21,18 +21,23 @@ namespace SteamNotifier
     {
         public static NotifyIcon Ni = new NotifyIcon();
 
+        static string[] IgnoredAppIDs;
+
         public static EventWaitHandle WaitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
 
         [STAThread]
         public static void Main()
         {
-
+            
             Ni.Click += TrayIconOnClick;
 
             RegistryMonitor monitor = new RegistryMonitor(RegistryHive.CurrentUser, @"SOFTWARE\Valve\Steam\Apps\");
 
             monitor.RegChanged += RegChanged;
-            
+
+            IgnoredAppIDs = LoadIgnored();
+
+
             try
             {
                 monitor.Start();
@@ -83,6 +88,10 @@ namespace SteamNotifier
             {
                 return;
             }
+            if (CheckIfIgnored(appId))
+            {
+                return;
+            }
 
             Logger.Instance.Info("Detected update for {0} ({1})", appName, appId);
             Ni.ShowBalloonTip(100, "Steam has started a download", "An update for " + appName + " has started downloading", ToolTipIcon.Info);
@@ -124,6 +133,30 @@ namespace SteamNotifier
             Ni.Dispose();
             Logger.Instance.Dispose();
             Application.Exit();
+        }
+
+        private static string[] LoadIgnored()
+        {
+            Logger.Instance.Info("Loading ignored App IDs");
+            using (StreamReader Reader = new StreamReader("ignoredappids.txt"))
+            {
+                string UnsplitList = Reader.ReadLine();
+                Logger.Instance.Info("Ignored App IDs: {0}", UnsplitList);
+                return UnsplitList.Split(',');
+            };
+
+            
+        }
+
+        private static bool CheckIfIgnored(string AppID)
+        {
+
+            if (IgnoredAppIDs.Contains(AppID)){
+                Logger.Instance.Info(String.Format("{0} was found to be updating but is set as ignored", AppID));
+                return true;
+            }
+            return false;
+        
         }
 
         private static string GetAppName(string id)
@@ -213,18 +246,7 @@ namespace SteamNotifier
 
                     object updating = local.GetValue("Updating");
 
-                    /*
-                    * 232330 = CS:GO Server
-                    * 
-                    * Showing as updating in
-                    * registry but I don't
-                    * even have access to 
-                    * it on Steam
-                    * 
-                    * ¯\_(ツ)_/¯
-                    */
-
-                    if (updating == null || (int) updating != 1 || appid == "232330")
+                    if (updating == null || (int) updating != 1)
                     {
                         return;
                     }
