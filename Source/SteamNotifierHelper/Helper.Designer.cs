@@ -33,6 +33,7 @@
             this.btnAbout = new System.Windows.Forms.Button();
             this.btnStop = new System.Windows.Forms.Button();
             this.imgIcon = new System.Windows.Forms.PictureBox();
+            this.btnOpenIgnored = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.imgIcon)).BeginInit();
             this.SuspendLayout();
             // 
@@ -53,7 +54,7 @@
             this.lblVersion.Name = "lblVersion";
             this.lblVersion.Size = new System.Drawing.Size(59, 13);
             this.lblVersion.TabIndex = 2;
-            this.lblVersion.Text = "version 1.2";
+            this.lblVersion.Text = "version 1.3";
             // 
             // ckbStartup
             // 
@@ -68,9 +69,9 @@
             // 
             // btnAbout
             // 
-            this.btnAbout.Location = new System.Drawing.Point(12, 132);
+            this.btnAbout.Location = new System.Drawing.Point(12, 163);
             this.btnAbout.Name = "btnAbout";
-            this.btnAbout.Size = new System.Drawing.Size(120, 23);
+            this.btnAbout.Size = new System.Drawing.Size(246, 23);
             this.btnAbout.TabIndex = 4;
             this.btnAbout.Text = "About";
             this.btnAbout.UseVisualStyleBackColor = true;
@@ -96,11 +97,22 @@
             this.imgIcon.TabIndex = 0;
             this.imgIcon.TabStop = false;
             // 
-            // SNUtility
+            // btnOpenIgnored
+            // 
+            this.btnOpenIgnored.Location = new System.Drawing.Point(12, 132);
+            this.btnOpenIgnored.Name = "btnOpenIgnored";
+            this.btnOpenIgnored.Size = new System.Drawing.Size(121, 23);
+            this.btnOpenIgnored.TabIndex = 6;
+            this.btnOpenIgnored.Text = "Change Ignored Apps";
+            this.btnOpenIgnored.UseVisualStyleBackColor = true;
+            this.btnOpenIgnored.Click += new System.EventHandler(this.btnOpenIgnored_Click);
+            // 
+            // Helper
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(269, 169);
+            this.ClientSize = new System.Drawing.Size(269, 199);
+            this.Controls.Add(this.btnOpenIgnored);
             this.Controls.Add(this.btnStop);
             this.Controls.Add(this.btnAbout);
             this.Controls.Add(this.ckbStartup);
@@ -108,7 +120,7 @@
             this.Controls.Add(this.lblHead);
             this.Controls.Add(this.imgIcon);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "SNUtility";
+            this.Name = "Helper";
             this.Text = "Steam Notifier";
             ((System.ComponentModel.ISupportInitialize)(this.imgIcon)).EndInit();
             this.ResumeLayout(false);
@@ -124,6 +136,7 @@
         private System.Windows.Forms.CheckBox ckbStartup;
         private System.Windows.Forms.Button btnAbout;
         private System.Windows.Forms.Button btnStop;
+        private System.Windows.Forms.Button btnOpenIgnored;
     }
 }
 

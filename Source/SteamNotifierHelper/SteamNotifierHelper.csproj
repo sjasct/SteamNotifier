@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\Output\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -28,7 +28,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\Output\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -60,6 +60,12 @@
     <Compile Include="a-boot.Designer.cs">
       <DependentUpon>a-boot.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmIgnore.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmIgnore.Designer.cs">
+      <DependentUpon>frmIgnore.cs</DependentUpon>
+    </Compile>
     <Compile Include="Helper.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -70,6 +76,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="a-boot.resx">
       <DependentUpon>a-boot.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmIgnore.resx">
+      <DependentUpon>frmIgnore.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Helper.resx">
       <DependentUpon>Helper.cs</DependentUpon>
@@ -84,6 +93,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

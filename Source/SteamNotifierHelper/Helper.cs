@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Windows.Forms;
 using IWshRuntimeLibrary;
 using File = System.IO.File;
@@ -84,6 +85,11 @@ namespace SteamNotifierHelper
                     MessageBox.Show("Could not remove SteamNotifier from startup!\n\nTry to see if you can find the shortcut in: \n" + Environment.GetFolderPath(Environment.SpecialFolder.Startup));
                 }
             }
+        }
+
+        private void btnOpenIgnored_Click(object sender, EventArgs e)
+        {
+            new frmIgnore().ShowDialog();
         }
     }
 }

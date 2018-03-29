@@ -142,7 +142,14 @@ namespace SteamNotifier
             {
                 string UnsplitList = Reader.ReadLine();
                 Logger.Instance.Info("Ignored App IDs: {0}", UnsplitList);
-                return UnsplitList.Split(',');
+                try
+                {
+                    return UnsplitList.Split(',');
+                }
+                catch
+                {
+                    return new string[] { "" };
+                }
             };
 
             
@@ -151,11 +158,16 @@ namespace SteamNotifier
         private static bool CheckIfIgnored(string AppID)
         {
 
-            if (IgnoredAppIDs.Contains(AppID)){
+            if (IgnoredAppIDs.Contains(AppID))
+            {
                 Logger.Instance.Info(String.Format("{0} was found to be updating but is set as ignored", AppID));
                 return true;
             }
-            return false;
+            else
+            {
+                return false;
+            }
+            
         
         }
 
