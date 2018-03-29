@@ -26,23 +26,13 @@ namespace SteamNotifier
         [STAThread]
         public static void Main()
         {
-            // WILL TO THIS AT A LATER DATE
-
-            //ContextMenuStrip menu = new ContextMenuStrip();
-
-            //menu.Items.Add("About");
-            //menu.Items.Add("Exit");
-
-            //ni.ContextMenuStrip = menu;
 
             Ni.Click += TrayIconOnClick;
 
             RegistryMonitor monitor = new RegistryMonitor(RegistryHive.CurrentUser, @"SOFTWARE\Valve\Steam\Apps\");
 
             monitor.RegChanged += RegChanged;
-
-            //AppDomain.CurrentDomain.ProcessExit += new EventHandler(exit);
-
+            
             try
             {
                 monitor.Start();
@@ -57,7 +47,6 @@ namespace SteamNotifier
                 Logger.Instance.Info("Waiting for registry updates");
             }
 
-            //ni.BalloonTipClicked += new EventHandler(balloonClicked);
             Ni.Visible = true;
             Ni.Icon = Resources.icon_bg;
 
@@ -116,12 +105,14 @@ namespace SteamNotifier
             }
             catch (FileNotFoundException fileNotFoundException)
             {
-                // TODO: Handle executable missing
+                Ni.ShowBalloonTip(100, "Could not launch settings!", "Sorry, but the settings executable could not be found. Check the debug.log file for more info", ToolTipIcon.Info);
+                Logger.Instance.Error("Failed to find and launch the utility executable");
+                Logger.Instance.Exception(fileNotFoundException);
             }
             catch (Exception ex)
             {
                 Ni.ShowBalloonTip(100, "Could not launch settings!", "Sorry, but the settings executable could not be launched. Check the debug.log file for more info", ToolTipIcon.Info);
-                Logger.Instance.Error("FAILED TO LAUNCH UTILITY EXECUTABLE");
+                Logger.Instance.Error("Failed to launch the utility executable");
                 Logger.Instance.Exception(ex);
             }
         }
