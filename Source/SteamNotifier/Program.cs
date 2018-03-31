@@ -137,6 +137,7 @@ namespace SteamNotifier
 
         private static string[] LoadIgnored()
         {
+
             Logger.Instance.Info("Loading ignored App IDs");
             using (StreamReader Reader = new StreamReader("ignoredappids.txt"))
             {
@@ -151,7 +152,6 @@ namespace SteamNotifier
                     return new string[] { "" };
                 }
             };
-
             
         }
 
@@ -189,6 +189,7 @@ namespace SteamNotifier
             }
             catch (WebException webException)
             {
+                Logger.Instance.Exception(webException);
                 // TODO: properly handle
             }
             catch (Exception e)
