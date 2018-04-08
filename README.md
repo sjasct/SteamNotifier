@@ -15,10 +15,13 @@ Extract the contents of `SteamNotifier-vx.x.x.zip` into your favourite folder.
 Run the `SteamNotifier.exe` file.  
  
 **Adding to / removing from startup**  
-Click on the SteamNotifier icon in the system tray or run the `SN-Utility.exe` file. Once the window is open, check/uncheck the "Run on startup" option.  
+Click on the SteamNotifier icon in the system tray or run the `SteamNotifierHelper.exe` file. Once the window is open, check/uncheck the "Run on startup" option.  
+
+**Ignore Applications**  
+If you don't want to recieve notifications about a specific application: click on the icon in the system tray or run the `SteamNotifierHelper.exe` file, click on "Change Ignored Apps" button and enter the ID of the application you want to ignore. If you don't know the ID of the application, search for it using [SteamDB](https://steamdb.info/).
 
 **Stopping SteamNotifier**  
-Click on the SteamNotifier icon in the system tray or run the `SN-Utility.exe` file. Once the window is open click "Stop SteamNotifier". After that is done, you can close that window. Alternatively, you can stop the Steam Notifier process through Task Manager if you know how to.  
+Click on the SteamNotifier icon in the system tray or run the `SteamNotifierHelper.exe` file. Once the window is open click "Stop SteamNotifier". After that is done, you can close that window. Alternatively, you can stop the Steam Notifier process through Task Manager if you know how to.  
 
 **Uninstalling**  
 Delete the SteamNotifier folder.  
