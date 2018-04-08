@@ -35,29 +35,6 @@ namespace SteamNotifierHelper
             abtForm.ShowDialog();
         }
 
-        private void btnStop_Click(object sender, EventArgs e)
-        {
-            Process[] processes = Process.GetProcessesByName("SteamNotifier");
-
-            if (processes.Length > 0)
-            {
-                Process snProcess = processes[0];
-
-                try
-                {
-                    snProcess.Kill();
-                }
-                catch
-                {
-                    MessageBox.Show("Failed to stop SteamNotifier!");
-                }
-            }
-            else
-            {
-                MessageBox.Show("The SteamNotifier background process is not running!");
-            }
-        }
-
         private void ckbStartup_CheckedChanged(object sender, EventArgs e)
         {
             if (ckbStartup.Checked)

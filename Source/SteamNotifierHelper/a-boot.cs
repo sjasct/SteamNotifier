@@ -24,5 +24,10 @@ namespace SteamNotifierHelper
         {
             Process.Start("https://github.com/Avinch/SteamNotifier/blob/master/LICENSE");
         }
+
+        private void lblVersion_Click(object sender, System.EventArgs e)
+        {
+
+        }
     }
 }

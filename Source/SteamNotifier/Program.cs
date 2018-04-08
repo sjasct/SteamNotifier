@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.Policy;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,7 +20,11 @@ namespace SteamNotifier
 {
     internal class Program
     {
-        public static NotifyIcon Ni = new NotifyIcon();
+        public static NotifyIcon Ni;
+        public static ContextMenu NiMenu;
+        public static MenuItem NiMenuMute;
+        public static MenuItem NiMenuAbout;
+        public static MenuItem NiMenuExit;
 
         static string[] IgnoredAppIDs;
 
@@ -28,8 +33,49 @@ namespace SteamNotifier
         [STAThread]
         public static void Main()
         {
-            
-            Ni.Click += TrayIconOnClick;
+
+            Thread NiCreation = new Thread(
+
+                delegate()
+                {
+
+                    string MuteButtonText;
+
+                    if (ReadMuteValue())
+                    {
+                        MuteButtonText = "Unmute Notifications";
+                    }
+                    else
+                    {
+                        MuteButtonText = "Mute Notifications";
+                    }
+
+                    // MENU
+                    NiMenu = new ContextMenu();
+                    NiMenuMute = new MenuItem(MuteButtonText);
+                    NiMenuAbout = new MenuItem("Settings");
+                    NiMenuExit = new MenuItem("Exit");
+                    NiMenu.MenuItems.Add(0, NiMenuMute);
+                    NiMenu.MenuItems.Add(1, NiMenuAbout);
+                    NiMenu.MenuItems.Add(2, NiMenuExit);
+
+                    // ICON
+                    Ni = new NotifyIcon();
+                    Ni.Icon = Resources.icon_bg;
+                    Ni.Text = "SteamNotifier";
+                    Ni.ContextMenu = NiMenu;
+
+                    NiMenuMute.Click += IconClickMute;
+                    NiMenuAbout.Click += IconClickAbout;
+                    NiMenuExit.Click += IconClickExit;
+
+                    Ni.Visible = true;
+                    Application.Run();
+                }
+                
+            );
+
+            NiCreation.Start();
 
             RegistryMonitor monitor = new RegistryMonitor(RegistryHive.CurrentUser, @"SOFTWARE\Valve\Steam\Apps\");
 
@@ -37,6 +83,10 @@ namespace SteamNotifier
 
             IgnoredAppIDs = LoadIgnored();
 
+            if (ReadMuteValue())
+            {
+                Logger.Instance.Info("Process has started with muted notifications");
+            }
 
             try
             {
@@ -52,18 +102,58 @@ namespace SteamNotifier
                 Logger.Instance.Info("Waiting for registry updates");
             }
 
-            Ni.Visible = true;
-            Ni.Icon = Resources.icon_bg;
-
             Console.ReadLine();
             WaitHandle.WaitOne();
+        }
+
+        private static void IconClickExit(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private static void IconClickMute(object sender, EventArgs e)
+        {
+            bool mutevalue = ReadMuteValue();
+
+            if (mutevalue)
+            {
+                SetMuteValue(false);
+                NiMenuMute.Text = "Mute Notifications";
+                Logger.Instance.Info("User has unmuted notifications");
+            }
+            else
+            {
+                SetMuteValue(true);
+                NiMenuMute.Text = "Unmute Notifications";
+                Logger.Instance.Info("User has muted notifications");
+            }
+        }
+
+        public static bool ReadMuteValue()
+        {
+
+            return Properties.Settings.Default.muted;
+
+        }
+
+        public static void SetMuteValue(bool mute)
+        {
+            Properties.Settings.Default.muted = mute;
+            Properties.Settings.Default.Save();
         }
 
         public static void Notify()
         {
             Logger.Instance.Info("Notify method called");
 
+            if (ReadMuteValue())
+            {
+                Logger.Instance.Info("Stopped notify method due to process being muted");
+                return;
+            }
+
             RegistryKey steamKey = null;
+            bool sendNotification = true;
 
             try
             {
@@ -86,15 +176,19 @@ namespace SteamNotifier
             
             if (!isUpdating)
             {
-                return;
+                sendNotification = false;
             }
             if (CheckIfIgnored(appId))
             {
-                return;
+                sendNotification = false;
             }
 
-            Logger.Instance.Info("Detected update for {0} ({1})", appName, appId);
-            Ni.ShowBalloonTip(100, "Steam has started a download", "An update for " + appName + " has started downloading", ToolTipIcon.Info);
+            if (sendNotification)
+            {
+                Logger.Instance.Info("Detected update for {0} ({1})", appName, appId);
+                Ni.ShowBalloonTip(100, "Steam has started a download", "An update for " + appName + " has started downloading", ToolTipIcon.Info);
+            }
+            
         }
 
         public static void RegChanged(object sender, EventArgs e)
@@ -103,8 +197,9 @@ namespace SteamNotifier
             Notify();
         }
 
-        public static void TrayIconOnClick(object sender, EventArgs e)
+        public static void IconClickAbout(object sender, EventArgs e)
         {
+
             Logger.Instance.Info("Attempting to launch utility executable");
 
             try

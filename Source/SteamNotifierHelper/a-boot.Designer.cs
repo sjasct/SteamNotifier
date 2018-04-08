@@ -46,7 +46,8 @@
             this.lblVersion.Name = "lblVersion";
             this.lblVersion.Size = new System.Drawing.Size(59, 13);
             this.lblVersion.TabIndex = 5;
-            this.lblVersion.Text = "version 1.3";
+            this.lblVersion.Text = "version 1.4";
+            this.lblVersion.Click += new System.EventHandler(this.lblVersion_Click);
             // 
             // lblHead
             // 
