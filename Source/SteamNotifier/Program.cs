@@ -25,6 +25,7 @@ namespace SteamNotifier
         public static MenuItem NiMenuMute;
         public static MenuItem NiMenuAbout;
         public static MenuItem NiMenuExit;
+        public static Thread NiCreation;
 
         static string[] IgnoredAppIDs;
 
@@ -34,7 +35,7 @@ namespace SteamNotifier
         public static void Main()
         {
 
-            Thread NiCreation = new Thread(
+            NiCreation = new Thread(
 
                 delegate()
                 {
@@ -108,7 +109,7 @@ namespace SteamNotifier
 
         private static void IconClickExit(object sender, EventArgs e)
         {
-            Application.Exit();
+            Environment.Exit(0);
         }
 
         private static void IconClickMute(object sender, EventArgs e)
