@@ -28,7 +28,6 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Helper));
             this.lblHead = new System.Windows.Forms.Label();
-            this.lblVersion = new System.Windows.Forms.Label();
             this.ckbStartup = new System.Windows.Forms.CheckBox();
             this.btnAbout = new System.Windows.Forms.Button();
             this.imgIcon = new System.Windows.Forms.PictureBox();
@@ -40,20 +39,11 @@
             // 
             this.lblHead.AutoSize = true;
             this.lblHead.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblHead.Location = new System.Drawing.Point(91, 21);
+            this.lblHead.Location = new System.Drawing.Point(91, 33);
             this.lblHead.Name = "lblHead";
             this.lblHead.Size = new System.Drawing.Size(160, 29);
             this.lblHead.TabIndex = 1;
             this.lblHead.Text = "SteamNotifier";
-            // 
-            // lblVersion
-            // 
-            this.lblVersion.AutoSize = true;
-            this.lblVersion.Location = new System.Drawing.Point(93, 50);
-            this.lblVersion.Name = "lblVersion";
-            this.lblVersion.Size = new System.Drawing.Size(59, 13);
-            this.lblVersion.TabIndex = 2;
-            this.lblVersion.Text = "version 1.4";
             // 
             // ckbStartup
             // 
@@ -104,7 +94,6 @@
             this.Controls.Add(this.btnOpenIgnored);
             this.Controls.Add(this.btnAbout);
             this.Controls.Add(this.ckbStartup);
-            this.Controls.Add(this.lblVersion);
             this.Controls.Add(this.lblHead);
             this.Controls.Add(this.imgIcon);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -120,7 +109,6 @@
 
         private System.Windows.Forms.PictureBox imgIcon;
         private System.Windows.Forms.Label lblHead;
-        private System.Windows.Forms.Label lblVersion;
         private System.Windows.Forms.CheckBox ckbStartup;
         private System.Windows.Forms.Button btnAbout;
         private System.Windows.Forms.Button btnOpenIgnored;
