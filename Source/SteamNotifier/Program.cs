@@ -1,20 +1,19 @@
-﻿using System;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Security.Policy;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RegistryUtils;
 using SteamNotifier.Helpers;
 using SteamNotifier.Properties;
+using System;
+using System.Diagnostics;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace SteamNotifier
 {
@@ -27,33 +26,31 @@ namespace SteamNotifier
         public static MenuItem NiMenuExit;
         public static Thread NiCreation;
 
-        static string[] IgnoredAppIDs;
+        private static string[] IgnoredAppIDs;
 
         public static EventWaitHandle WaitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
 
         [STAThread]
         public static void Main()
         {
-
             NiCreation = new Thread(
 
-                delegate()
+                delegate ()
                 {
-
-                    string MuteButtonText;
+                    string muteButtonText;
 
                     if (ReadMuteValue())
                     {
-                        MuteButtonText = "Unmute Notifications";
+                        muteButtonText = "Unmute Notifications";
                     }
                     else
                     {
-                        MuteButtonText = "Mute Notifications";
+                        muteButtonText = "Mute Notifications";
                     }
 
                     // MENU
                     NiMenu = new ContextMenu();
-                    NiMenuMute = new MenuItem(MuteButtonText);
+                    NiMenuMute = new MenuItem(muteButtonText);
                     NiMenuAbout = new MenuItem("Settings");
                     NiMenuExit = new MenuItem("Exit");
                     NiMenu.MenuItems.Add(0, NiMenuMute);
@@ -73,7 +70,7 @@ namespace SteamNotifier
                     Ni.Visible = true;
                     Application.Run();
                 }
-                
+
             );
 
             NiCreation.Start();
@@ -132,9 +129,7 @@ namespace SteamNotifier
 
         public static bool ReadMuteValue()
         {
-
             return Properties.Settings.Default.muted;
-
         }
 
         public static void SetMuteValue(bool mute)
@@ -174,7 +169,7 @@ namespace SteamNotifier
             string appName = updatingApp.AppName;
             string appId = updatingApp.AppId;
             bool isUpdating = updatingApp.UpdatingStatus;
-            
+
             if (!isUpdating)
             {
                 sendNotification = false;
@@ -189,7 +184,6 @@ namespace SteamNotifier
                 Logger.Instance.Info("Detected update for {0} ({1})", appName, appId);
                 Ni.ShowBalloonTip(100, "Steam has started a download", "An update for " + appName + " has started downloading", ToolTipIcon.Info);
             }
-            
         }
 
         public static void RegChanged(object sender, EventArgs e)
@@ -200,7 +194,6 @@ namespace SteamNotifier
 
         public static void IconClickAbout(object sender, EventArgs e)
         {
-
             Logger.Instance.Info("Attempting to launch utility executable");
 
             try
@@ -233,7 +226,6 @@ namespace SteamNotifier
 
         private static string[] LoadIgnored()
         {
-
             Logger.Instance.Info("Loading ignored App IDs");
             using (StreamReader Reader = new StreamReader("ignoredappids.txt"))
             {
@@ -248,12 +240,10 @@ namespace SteamNotifier
                     return new string[] { "" };
                 }
             };
-            
         }
 
         private static bool CheckIfIgnored(string AppID)
         {
-
             if (IgnoredAppIDs.Contains(AppID))
             {
                 Logger.Instance.Info(String.Format("{0} was found to be updating but is set as ignored", AppID));
@@ -263,8 +253,6 @@ namespace SteamNotifier
             {
                 return false;
             }
-            
-        
         }
 
         private static string GetAppName(string id)
@@ -316,14 +304,14 @@ namespace SteamNotifier
         }
 
         /*
-         * 
+         *
          * updateCheck method
          * borrowed from
          * https://github.com/benjibobs/Steam-Shutdown
          * under GNU v3.0 licence
-         * 
+         *
          * Modified to suit needs
-         * 
+         *
          */
 
         private static AppInfo UpdateCheck(RegistryKey key)
@@ -338,35 +326,34 @@ namespace SteamNotifier
 
             //Task.Run(() =>
             //{
-                Parallel.ForEach(key.GetSubKeyNames(), (sub, loopState) =>
+            Parallel.ForEach(key.GetSubKeyNames(), (sub, loopState) =>
+            {
+                Logger.Instance.Info("Checking sub key " + sub + "..");
+
+                RegistryKey local = key.OpenSubKey(sub, true);
+
+                if (local == null)
                 {
-                    Logger.Instance.Info("Checking sub key " + sub + "..");
+                    return;
+                }
 
-                    RegistryKey local = key.OpenSubKey(sub, true);
+                string[] splitLocalName = local.Name.Split('\\');
 
-                    if (local == null)
-                    {
-                        return;
-                    }
+                string appid = splitLocalName.Last();
 
-                    string[] splitLocalName = local.Name.Split('\\');
+                object updating = local.GetValue("Updating");
 
-                    string appid = splitLocalName.Last();
+                if (updating == null || (int)updating != 1)
+                {
+                    return;
+                }
 
-                    object updating = local.GetValue("Updating");
+                Logger.Instance.Info("Found an updating app");
 
-                    if (updating == null || (int) updating != 1)
-                    {
-                        return;
-                    }
+                appInfo = new AppInfo { AppId = appid, UpdatingStatus = true, AppName = GetAppName(appid) };
 
-                    Logger.Instance.Info("Found an updating app");
-
-                    appInfo = new AppInfo { AppId = appid, UpdatingStatus = true, AppName = GetAppName(appid) };
-
-                    loopState.Break();
-                    
-                });
+                loopState.Break();
+            });
             //});
 
             return appInfo;
