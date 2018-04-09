@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -36,11 +37,22 @@ namespace SteamNotifierHelper
 
         private void btnSubmit_Click(object sender, EventArgs e)
         {
-            using (StreamWriter Writer = new StreamWriter(IgnoredFile, false))
+
+            var regex = new Regex(@"^([0-9]+,)*[0-9]+$");
+
+            if(regex.IsMatch(txtContents.Text) || string.IsNullOrEmpty(txtContents.Text))
             {
-                Writer.Write(txtContents.Text);
-            };
-            this.Close();
+                using (StreamWriter Writer = new StreamWriter(IgnoredFile, false))
+                {
+                    Writer.Write(txtContents.Text);
+                }
+                this.Close();
+            }
+            else
+            {
+                MessageBox.Show("AppIDs must be followed by a comma e.g. 1234,5678,901", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            
         }
     }
 }
