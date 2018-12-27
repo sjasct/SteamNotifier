@@ -9,6 +9,7 @@ using Microsoft.Win32;
 using RegistryUtils;
 using SteamNotifier.Helpers;
 using SteamNotifier.Properties;
+using SNSettings = SteamNotifier.Helpers.Settings;
 
 namespace SteamNotifier
 {
@@ -61,15 +62,6 @@ namespace SteamNotifier
 			WaitHandle.WaitOne();
 		}
 
-		public static bool Muted
-		{
-			get { return Properties.Settings.Default.muted; }
-			set
-			{
-				Properties.Settings.Default.muted = value;
-				Properties.Settings.Default.Save();
-			}
-		}
 
 		private static void LoadApps()
 		{
@@ -89,7 +81,7 @@ namespace SteamNotifier
 		private static void RegistryUpdated(object sender, EventArgs e)
 		{
 
-			if (Muted)
+			if (SNSettings.Muted)
 			{
 				return;
 			}
@@ -136,7 +128,7 @@ namespace SteamNotifier
 
 				delegate()
 				{
-					string muteText = Muted ? "Unmute" : "Mute";
+					string muteText = SNSettings ? "Unmute" : "Mute";
 					
 					_trayMenuItemMute = new MenuItem($"{muteText} Notifications");
 					_trayMenuItemMute.Click += TrayMenuClick_Mute;
@@ -197,16 +189,16 @@ namespace SteamNotifier
 
 		private static void TrayMenuClick_Mute(object sender, EventArgs e)
 		{
-			string muteText = Muted ? "Mute" : "Unmute";
+			string muteText = SNSettings.Muted ? "Mute" : "Unmute";
 
-			if (Muted)
+			if (SNSettings.Muted)
 			{
-				Muted = false;
+				SNSettings.Muted = false;
 				Logger.Instance.Info("Notifications unmuted");
 			}
 			else
 			{
-				Muted = true;
+				SNSettings.Muted = true;
 				Logger.Instance.Info("Notifications muted");
 			}
 

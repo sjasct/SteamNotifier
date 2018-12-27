@@ -44,9 +44,9 @@
 			this.lblVersion.AutoSize = true;
 			this.lblVersion.Location = new System.Drawing.Point(93, 50);
 			this.lblVersion.Name = "lblVersion";
-			this.lblVersion.Size = new System.Drawing.Size(68, 13);
+			this.lblVersion.Size = new System.Drawing.Size(47, 13);
 			this.lblVersion.TabIndex = 5;
-			this.lblVersion.Text = "version 1.4.1";
+			this.lblVersion.Text = "[version]";
 			this.lblVersion.Click += new System.EventHandler(this.lblVersion_Click);
 			// 
 			// lblHead
