@@ -7,7 +7,7 @@ namespace SteamNotifier.Helpers
     {
         /// <summary>
         /// </summary>
-        public static string CurrentFolder => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        public static string CurrentFolder => Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
 
         /// <summary>
         /// </summary>

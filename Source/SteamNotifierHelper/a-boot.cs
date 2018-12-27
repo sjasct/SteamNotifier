@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Windows.Forms;
+using SteamNotifier;
 
 namespace SteamNotifierHelper
 {
@@ -29,5 +30,10 @@ namespace SteamNotifierHelper
         {
 
         }
-    }
+
+		private void About_Load(object sender, System.EventArgs e)
+		{
+			lblVersion.Text = $"v{SteamNotifier.Helpers.Assembly.Version}";
+		}
+	}
 }

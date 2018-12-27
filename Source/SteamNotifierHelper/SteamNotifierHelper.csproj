@@ -133,5 +133,11 @@
   <ItemGroup>
     <None Include="Resources\icon-bg.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SteamNotifier\SteamNotifier.csproj">
+      <Project>{bf2b85d2-ef3f-48c8-9737-75ba1b86bc65}</Project>
+      <Name>SteamNotifier</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
