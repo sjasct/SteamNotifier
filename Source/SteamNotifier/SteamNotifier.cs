@@ -178,12 +178,10 @@ namespace SteamNotifier
 			if (SNSettings.Muted)
 			{
 				SNSettings.Muted = false;
-				Logger.Instance.Info("Notifications unmuted");
 			}
 			else
 			{
 				SNSettings.Muted = true;
-				Logger.Instance.Info("Notifications muted");
 			}
 
 			_trayMenuItemMute.Text = $"{muteText} Notifications";

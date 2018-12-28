@@ -22,6 +22,7 @@ namespace SteamNotifier.Helpers
 			{
 				Properties.Settings.Default.Muted = value;
 				Save();
+				Logger.Instance.Info($"Set mute notifications setting to {value}");
 			}
 		}
 
@@ -32,6 +33,7 @@ namespace SteamNotifier.Helpers
 			{
 				Properties.Settings.Default.ShowAppID = value;
 				Save();
+				Logger.Instance.Info($"Set show app ID setting to {value}");
 			}
 		}
 
@@ -54,12 +56,18 @@ namespace SteamNotifier.Helpers
 					shortcut.WorkingDirectory = Location.CurrentFolder;
 					shortcut.TargetPath = targetExe;
 					shortcut.Save();
+					Logger.Instance.Info($"Added SteamNotifier to startup");
 				}
 				else
 				{
 					if (System.IO.File.Exists(_startupPath))
 					{
 						System.IO.File.Delete(_startupPath);
+						Logger.Instance.Info($"Removed SteamNotifier from startup");
+					}
+					else
+					{
+						Logger.Instance.Warn($"Tried removing SteamNotifier from startup but shortcut does not exist");
 					}
 				}
 			}
