@@ -1,5 +1,6 @@
-﻿namespace SteamNotifierHelper {
-    partial class Helper {
+﻿namespace SteamNotifier.Forms
+{
+    partial class Settings {
         /// <summary>
         /// Required designer variable.
         /// </summary>
@@ -26,7 +27,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Helper));
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Settings));
 			this.lblHead = new System.Windows.Forms.Label();
 			this.ckbStartup = new System.Windows.Forms.CheckBox();
 			this.btnAbout = new System.Windows.Forms.Button();
@@ -70,7 +71,7 @@
 			// 
 			// imgIcon
 			// 
-			this.imgIcon.Image = global::SteamNotifierHelper.Properties.Resources.icon_bg2;
+			this.imgIcon.Image = global::SteamNotifier.Properties.Resources.Icon_CircleBG_PNG;
 			this.imgIcon.Location = new System.Drawing.Point(12, 12);
 			this.imgIcon.Name = "imgIcon";
 			this.imgIcon.Size = new System.Drawing.Size(73, 67);
@@ -110,7 +111,7 @@
 			this.ckbAppID.UseVisualStyleBackColor = true;
 			this.ckbAppID.CheckedChanged += new System.EventHandler(this.ckbAppID_CheckedChanged);
 			// 
-			// Helper
+			// Settings
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -122,8 +123,9 @@
 			this.Controls.Add(this.ckbStartup);
 			this.Controls.Add(this.lblHead);
 			this.Controls.Add(this.imgIcon);
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-			this.Name = "Helper";
+			this.Name = "Settings";
 			this.Text = "Steam Notifier";
 			((System.ComponentModel.ISupportInitialize)(this.imgIcon)).EndInit();
 			this.ResumeLayout(false);

@@ -9,6 +9,7 @@ using Microsoft.Win32;
 using RegistryUtils;
 using SteamNotifier.Helpers;
 using SteamNotifier.Properties;
+using SteamNotifier.Forms;
 using SNSettings = SteamNotifier.Helpers.Settings;
 
 namespace SteamNotifier
@@ -98,7 +99,8 @@ namespace SteamNotifier
 				if (app.Ignored == false)
 				{
 					Logger.Instance.Info($"Notification: {app.Name} (ID: {app.ID}) found to be updating");
-					_trayIcon.ShowBalloonTip(100, "Steam has started a download", $"An update for {app.Name} ({app.ID}) has started downloading", ToolTipIcon.Info);
+					string appID = SNSettings.ShowAppID ? $" ({app.ID})" : "";
+					_trayIcon.ShowBalloonTip(100, "Steam has started a download", $"An update for {app.Name}{appID} has started downloading", ToolTipIcon.Info);
 				}
 				else
 				{
@@ -128,7 +130,7 @@ namespace SteamNotifier
 
 				delegate()
 				{
-					string muteText = SNSettings ? "Unmute" : "Mute";
+					string muteText = SNSettings.Muted ? "Unmute" : "Mute";
 					
 					_trayMenuItemMute = new MenuItem($"{muteText} Notifications");
 					_trayMenuItemMute.Click += TrayMenuClick_Mute;
@@ -145,7 +147,7 @@ namespace SteamNotifier
 					_trayIconMenu.MenuItems.Add(2, _trayMenuItemExit);
 
 					_trayIcon = new NotifyIcon();
-					_trayIcon.Icon = Resources.icon_bg;
+					_trayIcon.Icon = Resources.Icon_CircleBG_ICO;
 					_trayIcon.Text = "SteamNotifier";
 					_trayIcon.ContextMenu = _trayIconMenu;
 
@@ -166,25 +168,7 @@ namespace SteamNotifier
 
 		private static void TrayMenuClick_About(object sender, EventArgs e)
 		{
-			Logger.Instance.Info("Attempting to launch utility executable");
-
-			try
-			{
-				Process.Start("SteamNotifierHelper.exe");
-				Logger.Instance.Info("Utility executable launched..");
-			}
-			catch (FileNotFoundException fileNotFoundException)
-			{
-				_trayIcon.ShowBalloonTip(100, "Could not launch settings!", "Sorry, but the settings executable could not be found. Check the debug.log file for more info", ToolTipIcon.Info);
-				Logger.Instance.Error("Failed to find and launch the utility executable");
-				Logger.Instance.Exception(fileNotFoundException);
-			}
-			catch (Exception ex)
-			{
-				_trayIcon.ShowBalloonTip(100, "Could not launch settings!", "Sorry, but the settings executable could not be launched. Check the debug.log file for more info", ToolTipIcon.Info);
-				Logger.Instance.Error("Failed to launch the utility executable");
-				Logger.Instance.Exception(ex);
-			}
+			new Forms.Settings().Show();
 		}
 
 		private static void TrayMenuClick_Mute(object sender, EventArgs e)

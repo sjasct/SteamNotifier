@@ -63,20 +63,40 @@ namespace SteamNotifier.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        internal static System.Drawing.Icon icon {
+        internal static System.Drawing.Icon Icon_CircleAL_ICO {
             get {
-                object obj = ResourceManager.GetObject("icon", resourceCulture);
+                object obj = ResourceManager.GetObject("Icon_CircleAL_ICO", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Icon_CircleAL_PNG {
+            get {
+                object obj = ResourceManager.GetObject("Icon_CircleAL_PNG", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        internal static System.Drawing.Icon icon_bg {
+        internal static System.Drawing.Icon Icon_CircleBG_ICO {
             get {
-                object obj = ResourceManager.GetObject("icon_bg", resourceCulture);
+                object obj = ResourceManager.GetObject("Icon_CircleBG_ICO", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Icon_CircleBG_PNG {
+            get {
+                object obj = ResourceManager.GetObject("Icon_CircleBG_PNG", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
     }

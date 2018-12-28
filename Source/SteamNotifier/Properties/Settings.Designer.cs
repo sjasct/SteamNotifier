@@ -34,5 +34,17 @@ namespace SteamNotifier.Properties {
                 this["Muted"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ShowAppID {
+            get {
+                return ((bool)(this["ShowAppID"]));
+            }
+            set {
+                this["ShowAppID"] = value;
+            }
+        }
     }
 }
