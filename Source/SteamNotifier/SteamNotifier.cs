@@ -25,13 +25,6 @@ namespace SteamNotifier
 
 		private static RegistryKey _steamKey;
 
-		private static NotifyIcon _trayIcon;
-
-		private static ContextMenu _trayIconMenu;
-		private static MenuItem _trayMenuItemMute;
-		private static MenuItem _trayMenuItemAbout;
-		private static MenuItem _trayMenuItemExit;
-
 		public static EventWaitHandle WaitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
 
 		public static void Main()
@@ -58,7 +51,7 @@ namespace SteamNotifier
 			_apps = new List<App>();
 			LoadApps();
 
-			InitTrayIcon();
+			TrayIcon.Create();
 
 			WaitHandle.WaitOne();
 		}
@@ -100,7 +93,7 @@ namespace SteamNotifier
 				{
 					Logger.Instance.Info($"Notification: {app.Name} (ID: {app.ID}) found to be updating");
 					string appID = SNSettings.ShowAppID ? $" ({app.ID})" : "";
-					_trayIcon.ShowBalloonTip(100, "Steam has started a download", $"An update for {app.Name}{appID} has started downloading", ToolTipIcon.Info);
+					TrayIcon.SendNotification("Steam has started a download", $"An update for {app.Name}{appID} has started downloading");
 				}
 				else
 				{
@@ -122,79 +115,6 @@ namespace SteamNotifier
 				Logger.Instance.Error("Failed to refresh Steam base key");
 				Logger.Instance.Exception(ex);
 			}
-		}
-
-		private static void InitTrayIcon()
-		{
-			Thread trayIconThread = new Thread(
-
-				delegate()
-				{
-					string muteText = SNSettings.Muted ? "Unmute" : "Mute";
-					
-					_trayMenuItemMute = new MenuItem($"{muteText} Notifications");
-					_trayMenuItemMute.Click += TrayMenuClick_Mute;
-
-					_trayMenuItemAbout = new MenuItem("Settings");
-					_trayMenuItemAbout.Click += TrayMenuClick_About;
-
-					_trayMenuItemExit = new MenuItem("Exit");
-					_trayMenuItemExit.Click += TrayMenuClick_Exit;
-
-					_trayIconMenu = new ContextMenu();
-					_trayIconMenu.MenuItems.Add(0, _trayMenuItemMute);
-					_trayIconMenu.MenuItems.Add(1, _trayMenuItemAbout);
-					_trayIconMenu.MenuItems.Add(2, _trayMenuItemExit);
-
-					_trayIcon = new NotifyIcon();
-					_trayIcon.Icon = Resources.Icon_CircleBG_ICO;
-					_trayIcon.Text = "SteamNotifier";
-					_trayIcon.ContextMenu = _trayIconMenu;
-
-					_trayIcon.Visible = true;
-					Application.Run();
-
-				}
-
-				);
-
-			trayIconThread.Start();
-		}
-
-		private static void TrayMenuClick_Exit(object sender, EventArgs e)
-		{
-			Exit();
-		}
-
-		private static void TrayMenuClick_About(object sender, EventArgs e)
-		{
-			new Forms.Settings().Show();
-		}
-
-		private static void TrayMenuClick_Mute(object sender, EventArgs e)
-		{
-			string muteText = SNSettings.Muted ? "Mute" : "Unmute";
-
-			if (SNSettings.Muted)
-			{
-				SNSettings.Muted = false;
-			}
-			else
-			{
-				SNSettings.Muted = true;
-			}
-
-			_trayMenuItemMute.Text = $"{muteText} Notifications";
-
-		}
-
-		private static void Exit()
-		{
-			_trayIcon.Icon = null;
-			_trayIcon.Visible = false;
-			_trayIcon.Dispose();
-			Logger.Instance.Dispose();
-			Environment.Exit(0);
 		}
 	}
 }

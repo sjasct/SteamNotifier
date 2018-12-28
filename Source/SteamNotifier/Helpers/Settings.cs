@@ -23,6 +23,19 @@ namespace SteamNotifier.Helpers
 				Properties.Settings.Default.Muted = value;
 				Save();
 				Logger.Instance.Info($"Set mute notifications setting to {value}");
+				TrayIcon.UpdateMuteMenuItem();
+			}
+		}
+
+		public static void ToggleMute()
+		{
+			if (Muted == true)
+			{
+				Muted = false;
+			}
+			else
+			{
+				Muted = true;
 			}
 		}
 
@@ -34,6 +47,18 @@ namespace SteamNotifier.Helpers
 				Properties.Settings.Default.ShowAppID = value;
 				Save();
 				Logger.Instance.Info($"Set show app ID setting to {value}");
+			}
+		}
+
+		public static void ToggleShowAppID()
+		{
+			if (ShowAppID == true)
+			{
+				ShowAppID = false;
+			}
+			else
+			{
+				ShowAppID = true;
 			}
 		}
 
