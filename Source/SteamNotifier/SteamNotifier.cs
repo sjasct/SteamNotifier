@@ -91,9 +91,8 @@ namespace SteamNotifier
 			{
 				if (app.Ignored == false)
 				{
-					Logger.Instance.Info($"Notification: {app.Name} (ID: {app.ID}) found to be updating");
-					string appID = SNSettings.ShowAppID ? $" ({app.ID})" : "";
-					TrayIcon.SendNotification("Steam has started a download", $"An update for {app.Name}{appID} has started downloading");
+                    Logger.Instance.Info($"{app.Name} (ID: {app.ID}) found to be updating, confirming if still updating in 3 seconds before sending notification");
+					QueueApp(app);
 				}
 				else
 				{
@@ -102,6 +101,29 @@ namespace SteamNotifier
 			}
 
 		}
+
+	    private static void QueueApp(App app)
+	    {
+	        new Thread(() =>
+	            {
+	                Thread.CurrentThread.IsBackground = true;
+
+	                Thread.Sleep(3000);
+
+	                if (app.Updating)
+	                {
+	                    Logger.Instance.Info($"Notification: {app.Name} (ID: {app.ID}) found to be updating");
+	                    string appID = SNSettings.ShowAppID ? $" ({app.ID})" : "";
+	                    TrayIcon.SendNotification("Steam has started a download", $"An update for {app.Name}{appID} has started downloading");
+                    }
+	                else
+	                {
+                        Logger.Instance.Info($"{app.Name} (ID: {app.ID}) found to be a false update, not sending notification");
+	                }
+                }
+	        ).Start();
+
+	    }
 
 		private static void RefreshSteamBaseKey()
 		{
