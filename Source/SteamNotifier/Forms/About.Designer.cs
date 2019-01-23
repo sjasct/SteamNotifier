@@ -149,7 +149,7 @@
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "About";
-			this.Text = "About Steam Notifier";
+			this.Text = "About SteamNotifier";
 			this.Load += new System.EventHandler(this.About_Load);
 			((System.ComponentModel.ISupportInitialize)(this.imgIcon)).EndInit();
 			this.ResumeLayout(false);

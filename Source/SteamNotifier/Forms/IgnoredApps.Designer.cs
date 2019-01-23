@@ -110,7 +110,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "frmIgnore";
-            this.Text = "Ignored Applications | Steam Notifier";
+            this.Text = "Ignored Applications | SteamNotifier";
             this.Load += new System.EventHandler(this.frmIgnore_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
