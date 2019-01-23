@@ -39,7 +39,7 @@ namespace SteamNotifier
 			}
 			catch (Exception ex)
 			{
-				Logger.Instance.Info("Failed to start monitoring registry");
+				Logger.Instance.Error("Failed to start monitoring registry");
 				Logger.Instance.Exception(ex);
 				Application.Exit();
 			}
@@ -96,7 +96,7 @@ namespace SteamNotifier
 				}
 				else
 				{
-					Logger.Instance.Info($"{app.Name} (ID: {app.ID}) found to be updating but ignored");
+					Logger.Instance.Info($"{app.Name} (ID: {app.ID}) found to be updating but user has ignored this app, not sending notification");
 				}
 			}
 
@@ -112,7 +112,7 @@ namespace SteamNotifier
 
 	                if (app.Updating)
 	                {
-	                    Logger.Instance.Info($"Notification: {app.Name} (ID: {app.ID}) found to be updating");
+	                    Logger.Instance.Info($"{app.Name} (ID: {app.ID}) found to be updating after 3 seconds, sending notification");
 	                    string appID = SNSettings.ShowAppID ? $" ({app.ID})" : "";
 	                    TrayIcon.SendNotification("Steam has started a download", $"An update for {app.Name}{appID} has started downloading");
                     }
