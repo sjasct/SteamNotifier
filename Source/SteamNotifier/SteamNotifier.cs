@@ -89,7 +89,7 @@ namespace SteamNotifier
 
 			foreach (var app in updatingApps)
 			{
-                if (app.IsRunning)
+                if (app.IsRunning && SNSettings.NotifyWhileRunning == false)
                 {
                     Logger.Instance.Info($"{app.Name} (ID: {app.ID}) found to be updating but app is also running, not sending notification");
                 }

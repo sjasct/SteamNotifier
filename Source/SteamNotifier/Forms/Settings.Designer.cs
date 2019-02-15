@@ -35,6 +35,7 @@
             this.btnOpenIgnored = new System.Windows.Forms.Button();
             this.ckbMute = new System.Windows.Forms.CheckBox();
             this.ckbAppID = new System.Windows.Forms.CheckBox();
+            this.ckbNotifyWhileRunning = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.imgIcon)).BeginInit();
             this.SuspendLayout();
             // 
@@ -61,7 +62,7 @@
             // 
             // btnAbout
             // 
-            this.btnAbout.Location = new System.Drawing.Point(12, 206);
+            this.btnAbout.Location = new System.Drawing.Point(12, 222);
             this.btnAbout.Name = "btnAbout";
             this.btnAbout.Size = new System.Drawing.Size(246, 23);
             this.btnAbout.TabIndex = 4;
@@ -81,7 +82,7 @@
             // 
             // btnOpenIgnored
             // 
-            this.btnOpenIgnored.Location = new System.Drawing.Point(12, 175);
+            this.btnOpenIgnored.Location = new System.Drawing.Point(12, 191);
             this.btnOpenIgnored.Name = "btnOpenIgnored";
             this.btnOpenIgnored.Size = new System.Drawing.Size(245, 23);
             this.btnOpenIgnored.TabIndex = 6;
@@ -111,11 +112,22 @@
             this.ckbAppID.UseVisualStyleBackColor = true;
             this.ckbAppID.CheckedChanged += new System.EventHandler(this.ckbAppID_CheckedChanged);
             // 
+            // ckbNotifyWhileRunning
+            // 
+            this.ckbNotifyWhileRunning.AutoSize = true;
+            this.ckbNotifyWhileRunning.Location = new System.Drawing.Point(13, 168);
+            this.ckbNotifyWhileRunning.Name = "ckbNotifyWhileRunning";
+            this.ckbNotifyWhileRunning.Size = new System.Drawing.Size(149, 17);
+            this.ckbNotifyWhileRunning.TabIndex = 9;
+            this.ckbNotifyWhileRunning.Text = "Notify while app is running";
+            this.ckbNotifyWhileRunning.UseVisualStyleBackColor = true;
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(269, 240);
+            this.ClientSize = new System.Drawing.Size(269, 257);
+            this.Controls.Add(this.ckbNotifyWhileRunning);
             this.Controls.Add(this.ckbAppID);
             this.Controls.Add(this.ckbMute);
             this.Controls.Add(this.btnOpenIgnored);
@@ -142,6 +154,7 @@
         private System.Windows.Forms.Button btnOpenIgnored;
 		private System.Windows.Forms.CheckBox ckbMute;
 		private System.Windows.Forms.CheckBox ckbAppID;
-	}
+        private System.Windows.Forms.CheckBox ckbNotifyWhileRunning;
+    }
 }
 

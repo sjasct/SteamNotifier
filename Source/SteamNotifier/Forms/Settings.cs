@@ -35,15 +35,23 @@ namespace SteamNotifier.Forms
 		    ckbStartup.CheckedChanged -= ckbStartup_CheckedChanged;
 		    ckbMute.CheckedChanged -= ckbMute_CheckedChanged;
 		    ckbAppID.CheckedChanged -= ckbAppID_CheckedChanged;
+            ckbNotifyWhileRunning.CheckedChanged -= ckbNotifyWhileRunning_CheckedChanged;
 
 		    ckbStartup.Checked = Helpers.Settings.OpenOnStartup;
 		    ckbMute.Checked = Helpers.Settings.Muted;
 		    ckbAppID.Checked = Helpers.Settings.ShowAppID;
+            ckbNotifyWhileRunning.Checked = Helpers.Settings.NotifyWhileRunning;
 
 		    ckbStartup.CheckedChanged += ckbStartup_CheckedChanged;
 		    ckbMute.CheckedChanged += ckbMute_CheckedChanged;
 		    ckbAppID.CheckedChanged += ckbAppID_CheckedChanged;
-		}
+            ckbNotifyWhileRunning.CheckedChanged += ckbNotifyWhileRunning_CheckedChanged;
+        }
+
+        private void ckbNotifyWhileRunning_CheckedChanged(object sender, EventArgs e)
+        {
+            Helpers.Settings.NotifyWhileRunning = ckbNotifyWhileRunning.Checked;
+        }
 
         private void ckbStartup_CheckedChanged(object sender, EventArgs e)
         {
@@ -59,5 +67,6 @@ namespace SteamNotifier.Forms
 		{
 			Helpers.Settings.ShowAppID = ckbAppID.Checked;
 		}
+
 	}
 }

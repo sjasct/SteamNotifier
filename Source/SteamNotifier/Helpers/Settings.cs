@@ -62,7 +62,32 @@ namespace SteamNotifier.Helpers
 			}
 		}
 
-		public static bool OpenOnStartup
+
+        public static bool NotifyWhileRunning
+        {
+            get { return Properties.Settings.Default.NotifyWhileRunning; }
+            set
+            {
+                Properties.Settings.Default.NotifyWhileRunning = value;
+                Save();
+                Logger.Instance.Info($"Set notify while app is running setting to {value}");
+                TrayIcon.UpdateMuteMenuItem();
+            }
+        }
+
+        public static void ToggleNotifyWhileRunning()
+        {
+            if (NotifyWhileRunning == true)
+            {
+                NotifyWhileRunning = false;
+            }
+            else
+            {
+                NotifyWhileRunning = true;
+            }
+        }
+
+        public static bool OpenOnStartup
 		{
 			get
 			{ 

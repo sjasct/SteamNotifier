@@ -46,5 +46,17 @@ namespace SteamNotifier.Properties {
                 this["ShowAppID"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool NotifyWhileRunning {
+            get {
+                return ((bool)(this["NotifyWhileRunning"]));
+            }
+            set {
+                this["NotifyWhileRunning"] = value;
+            }
+        }
     }
 }
