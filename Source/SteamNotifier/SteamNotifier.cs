@@ -85,19 +85,23 @@ namespace SteamNotifier
 				LoadApps();
 			}
 
-			IEnumerable<App> updatingApps = _apps.Where(x => x.Updating == true);
+			IEnumerable<App> updatingApps = _apps.Where(x => x.IsUpdating == true);
 
 			foreach (var app in updatingApps)
 			{
-				if (app.Ignored == false)
+                if (app.IsRunning)
+                {
+                    Logger.Instance.Info($"{app.Name} (ID: {app.ID}) found to be updating but app is also running, not sending notification");
+                }
+                if (app.IsIgnored)
+				{
+                    Logger.Instance.Info($"{app.Name} (ID: {app.ID}) found to be updating but user has ignored this app, not sending notification");
+                }
+                else
 				{
                     Logger.Instance.Info($"{app.Name} (ID: {app.ID}) found to be updating, confirming if still updating in 3 seconds before sending notification");
-					QueueApp(app);
-				}
-				else
-				{
-					Logger.Instance.Info($"{app.Name} (ID: {app.ID}) found to be updating but user has ignored this app, not sending notification");
-				}
+                    QueueApp(app);
+                }
 			}
 
 		}
@@ -110,7 +114,7 @@ namespace SteamNotifier
 
 	                Thread.Sleep(3000);
 
-	                if (app.Updating)
+	                if (app.IsUpdating)
 	                {
 	                    Logger.Instance.Info($"{app.Name} (ID: {app.ID}) found to be updating after 3 seconds, sending notification");
 	                    string appID = SNSettings.ShowAppID ? $" ({app.ID})" : "";

@@ -46,15 +46,20 @@ namespace SteamNotifier
 			}
 		}
 
-		public bool Updating
+		public bool IsUpdating
 		{
 			get { return CheckIfUpdating(ID); }
 		}
 
-		public bool Ignored
+		public bool IsIgnored
 		{
 			get { return CheckIfIgnored(ID); }
 		}
+
+        public bool IsRunning
+        {
+            get { return CheckIfRunning(ID); }
+        }
 
         #region Static Members
 
@@ -122,9 +127,31 @@ namespace SteamNotifier
                 return false;
             }
 
-            object updatingValue = appKey.GetValue("Updating");
+            object value = appKey.GetValue("Updating");
 
-            if (updatingValue == null || (int)updatingValue != 1)
+            if (value == null || (int)value != 1)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        public static bool CheckIfRunning(int id)
+        {
+            RegistryKey steamKey = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Default).OpenSubKey(@"Software\Valve\Steam\Apps\");
+            RegistryKey appKey = steamKey.OpenSubKey(id.ToString(), true);
+
+            if (appKey == null)
+            {
+                return false;
+            }
+
+            object value = appKey.GetValue("Running");
+
+            if (value == null || (int)value != 1)
             {
                 return false;
             }
