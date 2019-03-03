@@ -71,7 +71,6 @@ namespace SteamNotifier.Helpers
                 Properties.Settings.Default.NotifyWhileRunning = value;
                 Save();
                 Logger.Instance.Info($"Set notify while app is running setting to {value}");
-                TrayIcon.UpdateMuteMenuItem();
             }
         }
 
@@ -84,6 +83,17 @@ namespace SteamNotifier.Helpers
             else
             {
                 NotifyWhileRunning = true;
+            }
+        }
+
+        public static decimal NotificationWaitTime
+        {
+            get { return Properties.Settings.Default.NotificationWaitTime; }
+            set
+            {
+                Properties.Settings.Default.NotificationWaitTime = value;
+                Save();
+                Logger.Instance.Info($"Set notify wait time setting to {value}");
             }
         }
 

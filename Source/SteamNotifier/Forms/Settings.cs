@@ -41,11 +41,18 @@ namespace SteamNotifier.Forms
 		    ckbMute.Checked = Helpers.Settings.Muted;
 		    ckbAppID.Checked = Helpers.Settings.ShowAppID;
             ckbNotifyWhileRunning.Checked = Helpers.Settings.NotifyWhileRunning;
+            numNotificationWait.Value = Helpers.Settings.NotificationWaitTime;
 
 		    ckbStartup.CheckedChanged += ckbStartup_CheckedChanged;
 		    ckbMute.CheckedChanged += ckbMute_CheckedChanged;
 		    ckbAppID.CheckedChanged += ckbAppID_CheckedChanged;
             ckbNotifyWhileRunning.CheckedChanged += ckbNotifyWhileRunning_CheckedChanged;
+            numNotificationWait.ValueChanged += numNotificationWait_ValueChanged;
+        }
+
+        private void numNotificationWait_ValueChanged(object sender, EventArgs e)
+        {
+            Helpers.Settings.NotificationWaitTime = (int)numNotificationWait.Value;
         }
 
         private void ckbNotifyWhileRunning_CheckedChanged(object sender, EventArgs e)
@@ -68,5 +75,12 @@ namespace SteamNotifier.Forms
 			Helpers.Settings.ShowAppID = ckbAppID.Checked;
 		}
 
-	}
+        private void BtnNotificantionWaitHelp_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Having this set to a value between 3-6 can prevent 'ghost' notifications when Steam starts up." +
+                "\n\nHowever, having this too high can stop notifications for small updates.", 
+                "Information - Notification wait time setting", 
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+    }
 }

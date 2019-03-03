@@ -99,7 +99,7 @@ namespace SteamNotifier
                 }
                 else
 				{
-                    Logger.Instance.Info($"{app.Name} (ID: {app.ID}) found to be updating, confirming if still updating in 3 seconds before sending notification");
+                    Logger.Instance.Info($"{app.Name} (ID: {app.ID}) found to be updating, confirming if still updating in {SNSettings.NotificationWaitTime} seconds before sending notification");
                     QueueApp(app);
                 }
 			}
@@ -112,11 +112,11 @@ namespace SteamNotifier
 	            {
 	                Thread.CurrentThread.IsBackground = true;
 
-	                Thread.Sleep(3000);
+	                Thread.Sleep((int)(SNSettings.NotificationWaitTime * 1000));
 
 	                if (app.IsUpdating)
 	                {
-	                    Logger.Instance.Info($"{app.Name} (ID: {app.ID}) found to be updating after 3 seconds, sending notification");
+	                    Logger.Instance.Info($"{app.Name} (ID: {app.ID}) found to be updating after {SNSettings.NotificationWaitTime} seconds, sending notification");
 	                    string appID = SNSettings.ShowAppID ? $" ({app.ID})" : "";
 	                    TrayIcon.SendNotification("Steam has started a download", $"An update for {app.Name}{appID} has started downloading");
                     }

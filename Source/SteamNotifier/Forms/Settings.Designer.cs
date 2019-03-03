@@ -36,7 +36,11 @@
             this.ckbMute = new System.Windows.Forms.CheckBox();
             this.ckbAppID = new System.Windows.Forms.CheckBox();
             this.ckbNotifyWhileRunning = new System.Windows.Forms.CheckBox();
+            this.numNotificationWait = new System.Windows.Forms.NumericUpDown();
+            this.lblNotificationWait = new System.Windows.Forms.Label();
+            this.btnNotificantionWaitHelp = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.imgIcon)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numNotificationWait)).BeginInit();
             this.SuspendLayout();
             // 
             // lblHead
@@ -62,9 +66,9 @@
             // 
             // btnAbout
             // 
-            this.btnAbout.Location = new System.Drawing.Point(12, 222);
+            this.btnAbout.Location = new System.Drawing.Point(12, 280);
             this.btnAbout.Name = "btnAbout";
-            this.btnAbout.Size = new System.Drawing.Size(246, 23);
+            this.btnAbout.Size = new System.Drawing.Size(319, 23);
             this.btnAbout.TabIndex = 4;
             this.btnAbout.Text = "About";
             this.btnAbout.UseVisualStyleBackColor = true;
@@ -82,9 +86,9 @@
             // 
             // btnOpenIgnored
             // 
-            this.btnOpenIgnored.Location = new System.Drawing.Point(12, 191);
+            this.btnOpenIgnored.Location = new System.Drawing.Point(12, 249);
             this.btnOpenIgnored.Name = "btnOpenIgnored";
-            this.btnOpenIgnored.Size = new System.Drawing.Size(245, 23);
+            this.btnOpenIgnored.Size = new System.Drawing.Size(319, 23);
             this.btnOpenIgnored.TabIndex = 6;
             this.btnOpenIgnored.Text = "Change Ignored Apps";
             this.btnOpenIgnored.UseVisualStyleBackColor = true;
@@ -122,11 +126,40 @@
             this.ckbNotifyWhileRunning.Text = "Notify while app is running";
             this.ckbNotifyWhileRunning.UseVisualStyleBackColor = true;
             // 
+            // numNotificationWait
+            // 
+            this.numNotificationWait.Location = new System.Drawing.Point(13, 192);
+            this.numNotificationWait.Name = "numNotificationWait";
+            this.numNotificationWait.Size = new System.Drawing.Size(42, 20);
+            this.numNotificationWait.TabIndex = 10;
+            // 
+            // lblNotificationWait
+            // 
+            this.lblNotificationWait.AutoSize = true;
+            this.lblNotificationWait.Location = new System.Drawing.Point(61, 194);
+            this.lblNotificationWait.Name = "lblNotificationWait";
+            this.lblNotificationWait.Size = new System.Drawing.Size(210, 13);
+            this.lblNotificationWait.TabIndex = 11;
+            this.lblNotificationWait.Text = "Seconds to wait before sending notification";
+            // 
+            // btnNotificantionWaitHelp
+            // 
+            this.btnNotificantionWaitHelp.Location = new System.Drawing.Point(277, 192);
+            this.btnNotificantionWaitHelp.Name = "btnNotificantionWaitHelp";
+            this.btnNotificantionWaitHelp.Size = new System.Drawing.Size(22, 20);
+            this.btnNotificantionWaitHelp.TabIndex = 12;
+            this.btnNotificantionWaitHelp.Text = "?";
+            this.btnNotificantionWaitHelp.UseVisualStyleBackColor = true;
+            this.btnNotificantionWaitHelp.Click += new System.EventHandler(this.BtnNotificantionWaitHelp_Click);
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(269, 257);
+            this.ClientSize = new System.Drawing.Size(343, 317);
+            this.Controls.Add(this.btnNotificantionWaitHelp);
+            this.Controls.Add(this.lblNotificationWait);
+            this.Controls.Add(this.numNotificationWait);
             this.Controls.Add(this.ckbNotifyWhileRunning);
             this.Controls.Add(this.ckbAppID);
             this.Controls.Add(this.ckbMute);
@@ -140,6 +173,7 @@
             this.Name = "Settings";
             this.Text = "SteamNotifier";
             ((System.ComponentModel.ISupportInitialize)(this.imgIcon)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numNotificationWait)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -155,6 +189,9 @@
 		private System.Windows.Forms.CheckBox ckbMute;
 		private System.Windows.Forms.CheckBox ckbAppID;
         private System.Windows.Forms.CheckBox ckbNotifyWhileRunning;
+        private System.Windows.Forms.NumericUpDown numNotificationWait;
+        private System.Windows.Forms.Label lblNotificationWait;
+        private System.Windows.Forms.Button btnNotificantionWaitHelp;
     }
 }
 
