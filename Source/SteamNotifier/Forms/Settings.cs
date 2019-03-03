@@ -14,7 +14,7 @@ namespace SteamNotifier.Forms
         {
             InitializeComponent();
 
-			SetSettingsValues();
+			LoadSettingsValues();
 		}
 
         private void btnAbout_Click(object sender, EventArgs e)
@@ -29,15 +29,16 @@ namespace SteamNotifier.Forms
 		    new IgnoredApps().ShowDialog();
 	    }
 
-		private void SetSettingsValues()
+		private void LoadSettingsValues()
 	    {
 		    // ensures that changing the checked value upon startup does not trigger the event
 		    ckbStartup.CheckedChanged -= ckbStartup_CheckedChanged;
 		    ckbMute.CheckedChanged -= ckbMute_CheckedChanged;
 		    ckbAppID.CheckedChanged -= ckbAppID_CheckedChanged;
             ckbNotifyWhileRunning.CheckedChanged -= ckbNotifyWhileRunning_CheckedChanged;
+            numNotificationWait.ValueChanged -= numNotificationWait_ValueChanged;
 
-		    ckbStartup.Checked = Helpers.Settings.OpenOnStartup;
+            ckbStartup.Checked = Helpers.Settings.OpenOnStartup;
 		    ckbMute.Checked = Helpers.Settings.Muted;
 		    ckbAppID.Checked = Helpers.Settings.ShowAppID;
             ckbNotifyWhileRunning.Checked = Helpers.Settings.NotifyWhileRunning;
@@ -81,6 +82,16 @@ namespace SteamNotifier.Forms
                 "\n\nHowever, having this too high can stop notifications for small updates.", 
                 "Information - Notification wait time setting", 
                 MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void BtnSettingsToDefault_Click(object sender, EventArgs e)
+        {
+            Helpers.Settings.NotifyWhileRunning = false;
+            Helpers.Settings.OpenOnStartup = false;
+            Helpers.Settings.ShowAppID = false;
+            Helpers.Settings.NotificationWaitTime = 5;
+            Helpers.Settings.Muted = false;
+            LoadSettingsValues();
         }
     }
 }

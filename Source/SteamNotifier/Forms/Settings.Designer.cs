@@ -39,6 +39,7 @@
             this.numNotificationWait = new System.Windows.Forms.NumericUpDown();
             this.lblNotificationWait = new System.Windows.Forms.Label();
             this.btnNotificantionWaitHelp = new System.Windows.Forms.Button();
+            this.btnSettingsToDefault = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.imgIcon)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numNotificationWait)).BeginInit();
             this.SuspendLayout();
@@ -152,11 +153,22 @@
             this.btnNotificantionWaitHelp.UseVisualStyleBackColor = true;
             this.btnNotificantionWaitHelp.Click += new System.EventHandler(this.BtnNotificantionWaitHelp_Click);
             // 
+            // btnSettingsToDefault
+            // 
+            this.btnSettingsToDefault.Location = new System.Drawing.Point(13, 220);
+            this.btnSettingsToDefault.Name = "btnSettingsToDefault";
+            this.btnSettingsToDefault.Size = new System.Drawing.Size(319, 23);
+            this.btnSettingsToDefault.TabIndex = 13;
+            this.btnSettingsToDefault.Text = "Reset to Defaults";
+            this.btnSettingsToDefault.UseVisualStyleBackColor = true;
+            this.btnSettingsToDefault.Click += new System.EventHandler(this.BtnSettingsToDefault_Click);
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(343, 317);
+            this.Controls.Add(this.btnSettingsToDefault);
             this.Controls.Add(this.btnNotificantionWaitHelp);
             this.Controls.Add(this.lblNotificationWait);
             this.Controls.Add(this.numNotificationWait);
@@ -192,6 +204,7 @@
         private System.Windows.Forms.NumericUpDown numNotificationWait;
         private System.Windows.Forms.Label lblNotificationWait;
         private System.Windows.Forms.Button btnNotificantionWaitHelp;
+        private System.Windows.Forms.Button btnSettingsToDefault;
     }
 }
 
